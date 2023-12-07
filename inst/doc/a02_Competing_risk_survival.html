@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Competing risk survival</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Competing risk survival</h1>
+
+
+
+<div id="set-up" class="section level2">
+<h2>Set up</h2>
+<p>Let’s first load the packages required.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CDMConnector)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(CohortSurvival)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code></pre></div>
+<p>We’ll create a cdm reference to use our example MGUS2 survival
+dataset. In practice you would use the CDMConnector package to connect
+to your data mapped to the OMOP CDM.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cdm <span class="ot">&lt;-</span> CohortSurvival<span class="sc">::</span><span class="fu">mockMGUS2cdm</span>()</span></code></pre></div>
+<p>We will proceed as we did with the single event survival, but this
+time we will also use a competing risk cohort of progression of the
+disease.</p>
+<p>We would typically need to define study cohorts ourselves, but in the
+case of our example data we already have these cohorts available. You
+can see for our diagnosis cohort we also have a number of additional
+features recorded for individuals which we’ll use for
+stratification.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 10</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB 0.8.1 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15…</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 88, 78, 94, 68, 90, 90, 89, 87, 86, 79, 86, 89, 8…</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, F, M, M, F, M, F, F, F, F, M, F, M, F, M, F, F…</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 13.1, 11.5, 10.5, 15.2, 10.7, 12.9, 10.5, 12.3, 1…</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.30, 1.20, 1.50, 1.20, 0.80, 1.00, 0.90, 1.20, 0…</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.5, 2.0, 2.6, 1.2, 1.0, 0.5, 1.3, 1.6, 2.4, 2.3,…</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;…</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>cdm<span class="sc">$</span>death_cohort <span class="sc">%&gt;%</span> </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB 0.8.1 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 1…</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-31, 1968-01-26, 1980-02-16, 1977-04-03, …</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1981-01-31, 1968-01-26, 1980-02-16, 1977-04-03, …</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>cdm<span class="sc">$</span>progression <span class="sc">%&gt;%</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB 0.8.1 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 56, 81, 83, 111, 124, 127, 147, 163, 165, 167, 18…</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1978-01-30, 1985-01-15, 1974-08-17, 1993-01-14, …</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1978-01-30, 1985-01-15, 1974-08-17, 1993-01-14, …</span></span></code></pre></div>
+</div>
+<div id="estimating-survival-with-competing-risk" class="section level2">
+<h2>Estimating survival with competing risk</h2>
+<p>The package allows to estimate survival of both an outcome and
+competing risk outcome. We can then stratify, see information on events,
+summarise the estimates and check the contributing participants in the
+same way we did for the single event survival analysis.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>MGUS_death_prog <span class="ot">&lt;-</span> <span class="fu">estimateCompetingRiskSurvival</span>(cdm,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">targetCohortTable =</span> <span class="st">&quot;mgus_diagnosis&quot;</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcomeCohortTable =</span> <span class="st">&quot;progression&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">competingOutcomeCohortTable =</span> <span class="st">&quot;death_cohort&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>MGUS_death_prog <span class="sc">%&gt;%</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Rows: 2,550</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Columns: 14</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ cdm_name       &lt;chr&gt; &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;,…</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ result_type    &lt;chr&gt; &quot;Survival estimate&quot;, &quot;Survival estimate&quot;, &quot;Survival est…</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ group_name     &lt;chr&gt; &quot;Cohort&quot;, &quot;Cohort&quot;, &quot;Cohort&quot;, &quot;Cohort&quot;, &quot;Cohort&quot;, &quot;Coho…</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ group_level    &lt;chr&gt; &quot;mgus_diagnosis&quot;, &quot;mgus_diagnosis&quot;, &quot;mgus_diagnosis&quot;, &quot;…</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ strata_name    &lt;chr&gt; &quot;Overall&quot;, &quot;Overall&quot;, &quot;Overall&quot;, &quot;Overall&quot;, &quot;Overall&quot;, …</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ strata_level   &lt;chr&gt; &quot;Overall&quot;, &quot;Overall&quot;, &quot;Overall&quot;, &quot;Overall&quot;, &quot;Overall&quot;, …</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ variable       &lt;chr&gt; &quot;Outcome&quot;, &quot;Outcome&quot;, &quot;Outcome&quot;, &quot;Outcome&quot;, &quot;Outcome&quot;, …</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ variable_level &lt;chr&gt; &quot;progression&quot;, &quot;progression&quot;, &quot;progression&quot;, &quot;progressi…</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ variable_type  &lt;chr&gt; &quot;estimate&quot;, &quot;estimate_95CI_lower&quot;, &quot;estimate_95CI_upper…</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ estimate_type  &lt;chr&gt; &quot;Cumulative failure probability&quot;, &quot;Cumulative failure p…</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ time           &lt;dbl&gt; 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6…</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ analysis_type  &lt;chr&gt; &quot;Competing risk&quot;, &quot;Competing risk&quot;, &quot;Competing risk&quot;, &quot;…</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ outcome        &lt;chr&gt; &quot;progression&quot;, &quot;progression&quot;, &quot;progression&quot;, &quot;progressi…</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; $ estimate       &lt;dbl&gt; 0.0000, 0.0000, 0.0000, 0.0000, NA, NA, 0.0014, 0.0004,…</span></span></code></pre></div>
+<p>As we can see above our results have been outputted in long format.
+We can plot these results like so.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCumulativeIncidence</span>(MGUS_death_prog, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colour =</span> <span class="st">&quot;outcome&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Our returned results also have attributes containing information that
+summarises survival.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>MGUS_death_prog <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(estimate_type <span class="sc">==</span> <span class="st">&quot;Survival summary&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">&quot;variable_type&quot;</span>, <span class="at">values_from =</span> <span class="st">&quot;estimate&quot;</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 0 × 12</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 12 variables: cdm_name &lt;chr&gt;, result_type &lt;chr&gt;, group_name &lt;chr&gt;,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   group_level &lt;chr&gt;, strata_name &lt;chr&gt;, strata_level &lt;chr&gt;, variable &lt;chr&gt;,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   variable_level &lt;chr&gt;, estimate_type &lt;chr&gt;, time &lt;dbl&gt;, analysis_type &lt;chr&gt;,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   outcome &lt;chr&gt;</span></span></code></pre></div>
+</div>
+<div id="with-stratification" class="section level2">
+<h2>With stratification</h2>
+<p>To estimate survival for particular strata of interest we need these
+features to have been added to the target cohort table. Once we have
+them defined, and as seen above we already have a number of example
+characteristics added to our diagnosis cohort, we can add
+stratifications like so.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>MGUS_death_prog <span class="ot">&lt;-</span>  <span class="fu">estimateCompetingRiskSurvival</span>(cdm,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">targetCohortTable =</span> <span class="st">&quot;mgus_diagnosis&quot;</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcomeCohortTable =</span> <span class="st">&quot;progression&quot;</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">competingOutcomeCohortTable =</span> <span class="st">&quot;death_cohort&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">strata =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">&quot;sex&quot;</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>As we can see as well as results for each strata, we’ll always also
+have overall results returned. We can filter the output table to plot
+only the cumulative failure probability for the different strata
+levels.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plotCumulativeIncidence</span>(MGUS_death_prog  <span class="sc">%&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                          dplyr<span class="sc">::</span><span class="fu">filter</span>(strata_name <span class="sc">!=</span> <span class="st">&quot;Overall&quot;</span>), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">facet =</span> <span class="st">&quot;strata_level&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">colour =</span> <span class="st">&quot;outcome&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>And we also now have summary statistics for each of the strata as
+well as overall.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>MGUS_death_prog <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(estimate_type <span class="sc">==</span> <span class="st">&quot;Survival summary&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">&quot;variable_type&quot;</span>, <span class="at">values_from =</span> <span class="st">&quot;estimate&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 0 × 12</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 12 variables: cdm_name &lt;chr&gt;, result_type &lt;chr&gt;, group_name &lt;chr&gt;,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   group_level &lt;chr&gt;, strata_name &lt;chr&gt;, strata_level &lt;chr&gt;, variable &lt;chr&gt;,</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   variable_level &lt;chr&gt;, estimate_type &lt;chr&gt;, time &lt;dbl&gt;, analysis_type &lt;chr&gt;,</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   outcome &lt;chr&gt;</span></span></code></pre></div>
+</div>
+<div id="summarising-participants" class="section level2">
+<h2>Summarising participants</h2>
+<p>If we set returnParticipants as TRUE then we will also be able to
+access the individuals that contributed to the analysis.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>MGUS_death_prog <span class="ot">&lt;-</span> <span class="fu">estimateCompetingRiskSurvival</span>(cdm,</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">targetCohortTable =</span> <span class="st">&quot;mgus_diagnosis&quot;</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">outcomeCohortTable =</span> <span class="st">&quot;progression&quot;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">competingOutcomeCohortTable =</span> <span class="st">&quot;death_cohort&quot;</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">returnParticipants =</span> <span class="cn">TRUE</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">survivalParticipants</span>(MGUS_death_prog)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Source:   table&lt;dbplyr_083&gt; [?? x 4]</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Database: DuckDB 0.8.1 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    cohort_definition_id subject_id cohort_start_date cohort_end_date</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;                   &lt;int&gt;      &lt;dbl&gt; &lt;date&gt;            &lt;date&gt;         </span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1                    1         56 1978-01-01        1978-01-01     </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2                    1        124 1974-01-01        1974-01-01     </span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3                    1        127 1978-01-01        1978-01-01     </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4                    1        147 1975-01-01        1975-01-01     </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5                    1        163 1966-01-01        1966-01-01     </span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6                    1        167 1968-01-01        1968-01-01     </span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7                    1        186 1989-01-01        1989-01-01     </span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8                    1        195 1981-01-01        1981-01-01     </span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9                    1        206 1986-01-01        1986-01-01     </span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10                    1        229 1981-01-01        1981-01-01     </span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ more rows</span></span></code></pre></div>
+</div>
+<div id="disconnect-from-the-cdm-database-connection" class="section level2">
+<h2>Disconnect from the cdm database connection</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cdm_disconnect</span>(cdm)</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
