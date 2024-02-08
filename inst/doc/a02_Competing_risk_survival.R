@@ -35,11 +35,11 @@ MGUS_death_prog %>%
 
 ## -----------------------------------------------------------------------------
 plotCumulativeIncidence(MGUS_death_prog, 
-                        colour = "outcome")
+                        colour = "variable_level")
 
 ## -----------------------------------------------------------------------------
 MGUS_death_prog %>% dplyr::filter(estimate_type == "Survival summary") %>%
-  tidyr::pivot_wider(names_from = "variable_type", values_from = "estimate")
+  tidyr::pivot_wider(names_from = "estimate_name", values_from = "estimate_value")
 
 ## -----------------------------------------------------------------------------
 MGUS_death_prog <-  estimateCompetingRiskSurvival(cdm,
@@ -55,11 +55,11 @@ MGUS_death_prog <-  estimateCompetingRiskSurvival(cdm,
 plotCumulativeIncidence(MGUS_death_prog  %>%
                           dplyr::filter(strata_name != "Overall"), 
                         facet = "strata_level",
-                        colour = "outcome")
+                        colour = "variable_level")
 
 ## -----------------------------------------------------------------------------
 MGUS_death_prog %>% dplyr::filter(estimate_type == "Survival summary") %>%
-  tidyr::pivot_wider(names_from = "variable_type", values_from = "estimate")
+  tidyr::pivot_wider(names_from = "estimate_name", values_from = "estimate_value")
 
 ## -----------------------------------------------------------------------------
 MGUS_death_prog <- estimateCompetingRiskSurvival(cdm,

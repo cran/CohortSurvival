@@ -33,7 +33,7 @@ plotSurvival(MGUS_death)
 
 ## -----------------------------------------------------------------------------
 survivalSummary(MGUS_death) %>% 
-  tidyr::pivot_wider(names_from = "variable_type", values_from = "estimate") %>%
+  tidyr::pivot_wider(names_from = "estimate_name", values_from = "estimate_value") %>%
   dplyr::mutate(
     "Median survival (95% CI)" = paste0(median_survival, 
                                         " (", median_survival_95CI_lower, 
@@ -57,7 +57,7 @@ plotSurvival(MGUS_death,
 
 ## -----------------------------------------------------------------------------
 survivalSummary(MGUS_death) %>%
-  tidyr::pivot_wider(names_from = "variable_type", values_from = "estimate") %>%
+  tidyr::pivot_wider(names_from = "estimate_name", values_from = "estimate_value") %>%
   dplyr::mutate("Median survival (95% CI)" = paste0(median_survival, " (", median_survival_95CI_lower, " to ", median_survival_95CI_higher, ")")
                 ) %>% 
   dplyr::select(strata_name, strata_level,"Median survival (95% CI)")
