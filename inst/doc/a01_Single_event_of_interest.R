@@ -27,19 +27,18 @@ MGUS_death <- estimateSingleEventSurvival(cdm,
 )
 MGUS_death %>% 
   glimpse()
+class(MGUS_death)
+
+## -----------------------------------------------------------------------------
+MGUS_death %>% 
+  asSurvivalResult() %>%
+  glimpse()
 
 ## -----------------------------------------------------------------------------
 plotSurvival(MGUS_death)
 
 ## -----------------------------------------------------------------------------
-survivalSummary(MGUS_death) %>% 
-  tidyr::pivot_wider(names_from = "estimate_name", values_from = "estimate_value") %>%
-  dplyr::mutate(
-    "Median survival (95% CI)" = paste0(median_survival, 
-                                        " (", median_survival_95CI_lower, 
-                                        " to ", median_survival_95CI_higher, ")")
-  ) %>%
-  dplyr::select("Median survival (95% CI)")
+tableSurvival(MGUS_death, times = c(100,200,300,400)) 
 
 ## -----------------------------------------------------------------------------
 MGUS_death <- estimateSingleEventSurvival(cdm,
@@ -48,7 +47,7 @@ MGUS_death <- estimateSingleEventSurvival(cdm,
   strata = list(c("age_group"),
                 c("sex"),
                 c("age_group", "sex"))
-)
+) 
 
 ## ----fig.height=6, fig.width=8------------------------------------------------
 plotSurvival(MGUS_death,
@@ -56,11 +55,8 @@ plotSurvival(MGUS_death,
              colour = "strata_level")
 
 ## -----------------------------------------------------------------------------
-survivalSummary(MGUS_death) %>%
-  tidyr::pivot_wider(names_from = "estimate_name", values_from = "estimate_value") %>%
-  dplyr::mutate("Median survival (95% CI)" = paste0(median_survival, " (", median_survival_95CI_lower, " to ", median_survival_95CI_higher, ")")
-                ) %>% 
-  dplyr::select(strata_name, strata_level,"Median survival (95% CI)")
+tableSurvival(MGUS_death, 
+                times = c(100,200,300,400))
 
 ## -----------------------------------------------------------------------------
 MGUS_death <- estimateSingleEventSurvival(cdm,
