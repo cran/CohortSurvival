@@ -1,6 +1,7 @@
 ## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE, warning = FALSE, message = FALSE,
+  out.width = "100%",
   comment = "#>"
 )
 
@@ -38,7 +39,7 @@ MGUS_death %>%
 plotSurvival(MGUS_death)
 
 ## -----------------------------------------------------------------------------
-tableSurvival(MGUS_death, times = c(100,200,300,400)) 
+tableSurvival(MGUS_death) 
 
 ## -----------------------------------------------------------------------------
 MGUS_death <- estimateSingleEventSurvival(cdm,
@@ -55,8 +56,7 @@ plotSurvival(MGUS_death,
              colour = "strata_level")
 
 ## -----------------------------------------------------------------------------
-tableSurvival(MGUS_death, 
-                times = c(100,200,300,400))
+tableSurvival(MGUS_death)
 
 ## -----------------------------------------------------------------------------
 MGUS_death <- estimateSingleEventSurvival(cdm,

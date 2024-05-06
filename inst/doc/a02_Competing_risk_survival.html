@@ -352,8 +352,8 @@ dataset. In practice you would use the CDMConnector package to connect
 to your data mapped to the OMOP CDM.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>cdm <span class="ot">&lt;-</span> CohortSurvival<span class="sc">::</span><span class="fu">mockMGUS2cdm</span>()</span></code></pre></div>
 <p>We will proceed as we did with the single event survival, but this
-time we will also use a competing risk cohort of progression of the
-disease.</p>
+time we are considering an event of interest (progression of disease)
+with a competing risk (mortality).</p>
 <p>We would typically need to define study cohorts ourselves, but in the
 case of our example data we already have these cohorts available. You
 can see for our diagnosis cohort we also have a number of additional
@@ -363,7 +363,7 @@ stratification.</p>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; Columns: 10</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.9.2 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.10.3-dev163 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15…</span></span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
@@ -379,7 +379,7 @@ stratification.</p>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.9.2 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.10.3-dev163 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
 <span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 1…</span></span>
 <span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-31, 1968-01-26, 1980-02-16, 1977-04-03, …</span></span>
@@ -389,7 +389,7 @@ stratification.</p>
 <span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.9.2 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.10.3-dev163 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
 <span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 56, 81, 83, 111, 124, 127, 147, 163, 165, 167, 18…</span></span>
 <span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1978-01-30, 1985-01-15, 1974-08-17, 1993-01-14, …</span></span>
@@ -414,34 +414,449 @@ same way we did for the single event survival analysis.</p>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; Columns: 14</span></span>
 <span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; $ result_id         &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; $ cdm_name          &lt;chr&gt; &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;mock&quot;, &quot;moc…</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; $ result_type       &lt;chr&gt; &quot;survival_estimate&quot;, &quot;survival_estimate&quot;, &quot;survival_…</span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; $ cohort            &lt;chr&gt; &quot;mgus_diagnosis&quot;, &quot;mgus_diagnosis&quot;, &quot;mgus_diagnosis&quot;…</span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; $ outcome           &lt;chr&gt; &quot;progression&quot;, &quot;progression&quot;, &quot;progression&quot;, &quot;progre…</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; $ competing_outcome &lt;chr&gt; &quot;death_cohort&quot;, &quot;death_cohort&quot;, &quot;death_cohort&quot;, &quot;dea…</span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; $ strata_name       &lt;chr&gt; &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall…</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; $ strata_level      &lt;chr&gt; &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall…</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; $ variable_name     &lt;chr&gt; &quot;cumulative_failure_probability&quot;, &quot;cumulative_failur…</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; $ variable_level    &lt;chr&gt; &quot;progression&quot;, &quot;progression&quot;, &quot;progression&quot;, &quot;progre…</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; $ estimate_name     &lt;chr&gt; &quot;estimate&quot;, &quot;estimate_95CI_lower&quot;, &quot;estimate_95CI_up…</span></span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; $ estimate_value    &lt;dbl&gt; 0.0000, 0.0000, 0.0000, 0.0000, NA, NA, 0.0014, 0.00…</span></span>
-<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; $ time              &lt;dbl&gt; 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5…</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; $ cohort            &lt;chr&gt; &quot;mgus_diagnosis&quot;, &quot;mgus_diagnosis&quot;, &quot;mgus_diagnosis&quot;…</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; $ outcome           &lt;chr&gt; &quot;progression&quot;, &quot;progression&quot;, &quot;progression&quot;, &quot;progre…</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; $ competing_outcome &lt;chr&gt; &quot;death_cohort&quot;, &quot;death_cohort&quot;, &quot;death_cohort&quot;, &quot;dea…</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; $ strata_name       &lt;chr&gt; &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall…</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; $ strata_level      &lt;chr&gt; &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall&quot;, &quot;overall…</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; $ variable_name     &lt;chr&gt; &quot;cumulative_failure_probability&quot;, &quot;cumulative_failur…</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; $ variable_level    &lt;chr&gt; &quot;progression&quot;, &quot;progression&quot;, &quot;progression&quot;, &quot;progre…</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; $ estimate_name     &lt;chr&gt; &quot;estimate&quot;, &quot;estimate_95CI_lower&quot;, &quot;estimate_95CI_up…</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; $ estimate_value    &lt;dbl&gt; 0.0000, 0.0000, 0.0000, 0.0000, NA, NA, 0.0014, 0.00…</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; $ time              &lt;dbl&gt; 0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5…</span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; $ result_type       &lt;chr&gt; &quot;survival&quot;, &quot;survival&quot;, &quot;survival&quot;, &quot;survival&quot;, &quot;sur…</span></span>
 <span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; $ analysis_type     &lt;chr&gt; &quot;competing_risk&quot;, &quot;competing_risk&quot;, &quot;competing_risk&quot;…</span></span></code></pre></div>
 <p>As we can see above our results have been outputted in long format.
 We can plot these results like so.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">plotSurvival</span>(MGUS_death_prog, <span class="at">cumulativeFailure =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>             <span class="at">colour =</span> <span class="st">&quot;variable_level&quot;</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>             <span class="at">colour =</span> <span class="st">&quot;variable_level&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;top&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAA8FBMVEUAAAAAADoAAGYAOmYAOpAAZpAAZrYAv8Q6AAA6ADo6AGY6OmY6OpA6kNtNTU1NTW5NTY5NbqtNjshmAABmADpmAGZmOgBmOjpmZgBmZjpmkJBmtv9uTU1uTW5uTY5ubo5ubqtuq+SOTU2OTW6OTY6Obk2OyP+QOgCQOjqQZgCQkDqQkGaQtpCQ27aQ2/+l3t+rbk2rbm6rbo6ryKur5OSr5P+z7O22ZgC225C2/9u2///Ijk3I///bkDrb/7bb///kq27k///r6+vvyMX4dm391tP/tmb/yI7/25D/29v/5Kv//7b//8j//9v//+T///9g1g2HAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAOQklEQVR4nO2dC3vbthWGGS+zHK9utqrpLsou6TZrV7vdlmhzqrmNJVuzY+v//5sBOCAJECAPAALkoYLvSSLpCCKBNwf3C4t9VqeKsSNAXRkQogwIUQaEKANClAEhyoAQZUCIMiBEGRCiDAhRBoQoA0KUASHKgBBlQIgyIEQZEKIMCFEGhCgDQpQBIRoK0ONyoRt2p1fsT1tw86uOwD3VfeUMCNEggB7mxY++WvCXI5bK3UlRLPj7f5/+gr1TQz27kIF28iv56SdfFYX4rcO9Xv2FX4b95OhK3pDf/ucXquW2UF44enmfz/6sRkgoFqCNIeXL1RmLy4K/rI/3D19eSPfZnTD782sZiPsY+7QStvKr8tNC86DZzPxbAZo/v749uuI/kb8WL88uSguPwqsr5YVfWb9rCkBd4hFhyedk+FuwyCxWpxve8QAsoPxK/+R2s/li//gn8RP5a3F7aYEo8BceFF667zMEIHHPFc9VBff+/Yp7tgnos2sZVqZGhqg/Od1MpHq1KH/Cf80uXAKSUWC5nEcEXrrvM6QHSe+ZL8oslsSDGKB2D3pVXURmJZ6xRvcgpQyC+Ox3Ly4MQLwMYp+UQHXZ4JXFjsufNMqg2sKN9Uv3fQYB9LgsazHu2OuCf3pcslpMi49ei2m1C88BS8da7MtfynxT1oH85cfgQWUUVlCLrZq12FiAhpQseRsKb0WND4g3i2TpHUMmIOa/Pa4+PiDiyoAQZUCIMiBEGRCiDAhRBoQoA0KUASHKgBBlQIgyIEQZEKIMCFEGhCgDQpQBIcqAEGVAiDIgRBkQogwIUQaEKANClAEhUgE9zIMmID8cqB2ke9CqKBoLrBxELWEpAYnlD8VZ5y+SRYiaHWSWQRyR20qTyBGiZgc1Aa2L4phlNZ+MRi1hCQHxhSJiFeytjwtRS1g6QA9zr6wVO0LU7CAdkL/7RIwQNTsoA3IGtC5KHXf+IlmEqNlBFg/yFbWEpW4HeYtawhIBYu4jFuo7b6uJHiFqdlD2oFSAPhy4DEBl/spZTFfOYhlQqB2Ua7HsQT72jfFtBuQF6JbnMN/+BoWEtdi3qm62dql2BNAa9ucdzph0ZECHN9yRAXXYO0EEZrFbyGKehdAnAujguhopPChMBAB5g/ikAIWACAQkd2hPKYt1J9g8kwaTcRcV0OPyjB+xMaVCutsjNt4eZN6lWc2vzBN0MBEFxP0hAaD18ZTaQV0J3rTYewDarwSd9XQ8qEyXtThJAIgVQvtVdc7Fx68//9kP/M33n3Odi9effpcywc52NWEhWSkQkKanbxiSL8pPd4zV+/NkCfay6wkL8pQYgD7+4bv9/W+kw3z8/dv907dv0yTYy64nDMlKve4Lah8Puv/dD4KLEHclluV4RisvO4ZumtoYFk09bmUFpI0H8UxVAhKv97+2e9GIXQrDexQP6n1fUPtwh+pBd1BaM1nKoRE7nyWgJPcFtQNSy6D3b8owowHS4ag1ear7gtrHg56+eVPWYpCxuBs9/WOEat6CRi2MU90X1DEeBO0g7kQyp7F20EtLRZYWUKN6VkqdG1tBEzE+IOrDHdtm7zwDUqXWSrYWc9L4gHRAYp2i56xPMkCNattoEd4kjg+I7LyYnpU070l636aITvtonqL1J9Le1xRNQHqtbvhOsvtaRDKLqXzidT4PppBuek+svtXBVPPNSj11e8cdkPFoBzfFjKiWtwaqzr0LaV9FjKgFz6DDKRbphbT/jt6IEfpg4RP3+n52kO5B4y5eqPgM2yCcTCF9o/GJf/2pA6oG4TeNSp0SoPV4izhln2uEBuE0WtJbdYw5wfUD7KDgvlikiRwpmMPZ9J6siafegBRU/e3QILT6DyUP4g94GSWLqY2fFNcPs4Ns7SDPplAcQJvR+lz0q3npP6nHmCcNSIz7pLp+oB00OqC69ZwBWe0Vn9FAkAZU+894IOgDAj6TAMT6YgvvQaHwCNXd937XSWMH6atcn/93vnhcDnX6izI61us6ieygRleD9zaG6moooz+9rpPKDhoPUJPPBADt1zyLDdUXa/KZAiBY5TrMxKHZP50CoCAFRcjwnykAGnDisPafftdJaQeNNHFo4TMBQMNNHJr5K+w6Se2gjonDardPuc2nNvSMUJnB+l4nrR3ktNsHVo/r2396REhrP/e4TmI7yGW3j9ygoW3/6XHjG6v/TAGQnsXqvRpym4+2/afHtI/cpRNpeiaVbIAkJvm47Xq3j9zmo27/6fE/U04Q9r3OeFlM7nrWHYaVQw1D6I0ZICufCQEyd/vsOaA4ZZCcIPSIKDlA8rz2ereP3OajbP8Jv3FLAe19nQHsIEshre965j4jt/nEaAdtWwog3+sMYAcN3FnlfKhNEFICtAVAva8ziB006AFLcg6+93WGsYOG9CDZxaAGghig7VQBpT/LtZwCowaCigeRnYMnAqgeA6IGwgNQwjPMlDEyaiDcAaU8w4zwIgWfrka6M8yULgY1EH6AEp1hpnbBqIHwKIOSnWGm9eGpgfAApJ9h5ir8xvoYBzUQBKp5fYyDGgiflnSamVWowdzDE7GDBgCkrLJzCk/FDrI9gC3ybp9JzPIYMgGlWrwAJbR7eDJ2UPpCupHB6IEYH9CG9iqOkQEZfMiBGBeQkcHogRgVkIUPORA+gKJvRdCbiHh4SnZQ0q0IsJTVPTwtOyjpSvutzYHIgRgPULOPgYUnZgcl3IpwY+dDDoRPIR11K8JNy0oXaiDGqub5SjLrSiBqIMYENImVZD6FtG/u6rgBLLXziRA1O0gvpANOD2oHNJWldn5ZbFVEGrS312BdEaJmB9kWccZoB01oJZm3B3nysd5ALLXzjBA1O0jvi2n5q17Uev9aPHHE49k+PINRS3CUrobyqd7cw5fX8+0I7s/22R4mIF31wvo7jun9ufuzfaCPSi3BPQEZS/D0rRnsnfuzfcREzzCzM8lkADKkbe7h2xCcn+0jBzmoeUS0MsjybJ+PX5fPrnF5dI2cCKOW4NiAlM09968rLA6AylEyagnuC6ieeoYh13pzj+Tj+myfsg1NLcGxq/l9tdtHecahw7N9qmFWagmmMtxRDUNTS7Bif6fqUnlv/ir6MuC6k0oARJs9EFCMZcDKPAYBEG32QEAxlgEr8zwEQLTZewDquQx4e9CAIiwDVicKCYBos4cC6r0MWFtMRgBEmz0UUJh0QJNYrDkWoMmsZg0BFGNTr75UgQCISk0Q43hQYylHBtSIEOXVrHEA9dzU21wLRBjQ7N1s9q78e6m8N3/Zfn6Qs2SEjLVSpAH1yWJhXQ1zMdm4gLqzUj9AQVnMXGx3sIBWIR7U3JCBJiC1vRNEYBZrnB/UrcYsCX8wz/BzM5UuEc1YSXyp/bWrvqINUKDAg8ZdzYpkpVnULOYrHlGWwYIS1tuOJNjXbt4l0pCruVw8FSDXBGtNnUiAvNfY1wlICijII2YtdpND231BcXYc2vjEAOT8P6/6y2XlM7EBhR+4HReQl6douag1fEh8QPoD2HwXl8kbWHasBESI2zFPUYmIvw7hIwIKLaStfLwjZEuYBqPhKm2Fa6yyD9SYF+sM23qDcEDW//kGjc4sFnhfFzsoSiFt5YNGyJpgS/l6iVwnlR0UpZD2BGTLSvbap/s6ie0gvQw6DSqk7TnMaVxGzUyXKhXkOkPYQTFGFO18mjc2ypqmv1AaYKsVoy/mAkgtU+r6uT08ATsoOSC1oJFjwNaMNAVAsbPYuwYcWcRQA+HrQf6D9hZAdVlTtWfQCFGzg2IM2jcBVYVx6TZuEaJmB8UYtK8BNatvW0OXHAhvQN6D9gBIafKFdQ6p2UHoof/Ku5ZD/wWf2m+iR5QOIF31dij5ru3hRxtJJ1VEqQKqtyLId20PHtnM9iadiBElA0h05h+XZQlUb2aR79oefjSbDTsHNoxMQLsTGA0q9/TW26Hku0gPP5qMHVQDWh3rbxAPGi6iRADVo2XGdiikDKKWsKEA1duh5LsoDz+akB1UAaoHpMuF5PXDj7rbQdQSlqoMWsvC2XvonlrCklXzK9GEfpjHPAVvynaQ2lAU02K+GxEOXRFGFA9bGRCiDAhRBoQoA0KUASHKgBBlQIj6Amrpn9kkRgK6u3VqaDgWzDn8HRwf5hweRpLx8D0BtY1TW3THE4AMb9eSx4I5hxcPFP7C/fp7fiTbuUP4noDaxohMvX/5Tz4u0D20VEseC+YcnqsO6BL+/rd/PHeIT09AbaOM1rAsBsjgpK46oFt45gPu4Z++/RdzGzx8T0Bt49Q2cUDI8LYmPkDnEf7+9cu3HuG/f8PzFR6ergeJY8GSeRwL8TSEB7mXQQDIvYyAY6+8yiCfMgsOjXqTvAxqG6e2iccAGd5WAsOxYM7hZSZxDr+HGhgPT7UdVB4L5tyukeeHUWsHHb4yIEQZEKIMCFEGhCgDQjQuoMdleTrq7kX7fJztu7C9fwEa34O60LQrA0L0yQFi/+5e/O2kKM74BPgCcp+EUH0nF+g8zItnf2XfianyM1jwtT6Gj0E73rpECdDJ8+v9uuD/HF2JPfxyIU71HQDjT9h5mB9diRVNzMad6XG5ENfZncQmRArQQqaQfRBZSC7qqr6DzCi+YmD+dw3f8VC706uw3YCoKAESLiD/kcd/n+2b30m/EjhuYTUKy17sD38qSNDJEd0iC0hZpdQC6GHO4HDb7vQ/sNuWFU7Ry26qgG6VdUoNQCKLsX/EriQe7nH5qzJ7BW7c7hBVQGJBu6TUAPQwPxaFNP92d8KDrHneEtzC2gxdogpIVPPSixqAqmqeP4ro7/OyZC9LpMgaH1AEJarAhA4C0DroSA03HQAg0YhMpgMAlFYZEKIMCFEGhCgDQpQBIcqAEP0fsfpVsJR+aiIAAAAASUVORK5CYII=" width="75%" /></p>
 <p>Our returned results also have attributes containing information that
 summarises survival.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">tableSurvival</span>(MGUS_death_prog, <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">200</span>,<span class="dv">300</span>,<span class="dv">400</span>)) </span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 2 × 11</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co">#&gt;   cdm_name cohort         variable_level analysis_type outcome competing_outcome</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;            </span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co">#&gt; 1 mock     mgus_diagnosis progression    competing_ri… progre… death_cohort     </span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co">#&gt; 2 mock     mgus_diagnosis death_cohort   competing_ri… progre… death_cohort     </span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co">#&gt; # ℹ 5 more variables: number_records &lt;dbl&gt;, `100 days survival estimate` &lt;chr&gt;,</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co">#&gt; #   `200 days survival estimate` &lt;chr&gt;, `300 days survival estimate` &lt;chr&gt;,</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co">#&gt; #   `400 days survival estimate` &lt;chr&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">tableSurvival</span>(MGUS_death_prog) </span></code></pre></div>
+<div id="tyfanbjaij" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tyfanbjaij table {
+font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+#tyfanbjaij thead, #tyfanbjaij tbody, #tyfanbjaij tfoot, #tyfanbjaij tr, #tyfanbjaij td, #tyfanbjaij th {
+border-style: none;
+}
+#tyfanbjaij p {
+margin: 0;
+padding: 0;
+}
+#tyfanbjaij .gt_table {
+display: table;
+border-collapse: collapse;
+line-height: normal;
+margin-left: auto;
+margin-right: auto;
+color: #333333;
+font-size: 16px;
+font-weight: normal;
+font-style: normal;
+background-color: #FFFFFF;
+width: auto;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #A8A8A8;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #A8A8A8;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+}
+#tyfanbjaij .gt_caption {
+padding-top: 4px;
+padding-bottom: 4px;
+}
+#tyfanbjaij .gt_title {
+color: #333333;
+font-size: 125%;
+font-weight: initial;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-color: #FFFFFF;
+border-bottom-width: 0;
+}
+#tyfanbjaij .gt_subtitle {
+color: #333333;
+font-size: 85%;
+font-weight: initial;
+padding-top: 3px;
+padding-bottom: 5px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-color: #FFFFFF;
+border-top-width: 0;
+}
+#tyfanbjaij .gt_heading {
+background-color: #FFFFFF;
+text-align: center;
+border-bottom-color: #FFFFFF;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#tyfanbjaij .gt_bottom_border {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#tyfanbjaij .gt_col_headings {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#tyfanbjaij .gt_col_heading {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: normal;
+text-transform: inherit;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 6px;
+padding-left: 5px;
+padding-right: 5px;
+overflow-x: hidden;
+}
+#tyfanbjaij .gt_column_spanner_outer {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: normal;
+text-transform: inherit;
+padding-top: 0;
+padding-bottom: 0;
+padding-left: 4px;
+padding-right: 4px;
+}
+#tyfanbjaij .gt_column_spanner_outer:first-child {
+padding-left: 0;
+}
+#tyfanbjaij .gt_column_spanner_outer:last-child {
+padding-right: 0;
+}
+#tyfanbjaij .gt_column_spanner {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 5px;
+overflow-x: hidden;
+display: inline-block;
+width: 100%;
+}
+#tyfanbjaij .gt_spanner_row {
+border-bottom-style: hidden;
+}
+#tyfanbjaij .gt_group_heading {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+text-align: left;
+}
+#tyfanbjaij .gt_empty_group_heading {
+padding: 0.5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: middle;
+}
+#tyfanbjaij .gt_from_md > :first-child {
+margin-top: 0;
+}
+#tyfanbjaij .gt_from_md > :last-child {
+margin-bottom: 0;
+}
+#tyfanbjaij .gt_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+margin: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+border-top-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+overflow-x: hidden;
+}
+#tyfanbjaij .gt_stub {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+}
+#tyfanbjaij .gt_stub_row_group {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+vertical-align: top;
+}
+#tyfanbjaij .gt_row_group_first td {
+border-top-width: 2px;
+}
+#tyfanbjaij .gt_row_group_first th {
+border-top-width: 2px;
+}
+#tyfanbjaij .gt_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#tyfanbjaij .gt_first_summary_row {
+border-top-style: solid;
+border-top-color: #D3D3D3;
+}
+#tyfanbjaij .gt_first_summary_row.thick {
+border-top-width: 2px;
+}
+#tyfanbjaij .gt_last_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#tyfanbjaij .gt_grand_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#tyfanbjaij .gt_first_grand_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-style: double;
+border-top-width: 6px;
+border-top-color: #D3D3D3;
+}
+#tyfanbjaij .gt_last_grand_summary_row_top {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: double;
+border-bottom-width: 6px;
+border-bottom-color: #D3D3D3;
+}
+#tyfanbjaij .gt_striped {
+background-color: rgba(128, 128, 128, 0.05);
+}
+#tyfanbjaij .gt_table_body {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#tyfanbjaij .gt_footnotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#tyfanbjaij .gt_footnote {
+margin: 0px;
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#tyfanbjaij .gt_sourcenotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#tyfanbjaij .gt_sourcenote {
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#tyfanbjaij .gt_left {
+text-align: left;
+}
+#tyfanbjaij .gt_center {
+text-align: center;
+}
+#tyfanbjaij .gt_right {
+text-align: right;
+font-variant-numeric: tabular-nums;
+}
+#tyfanbjaij .gt_font_normal {
+font-weight: normal;
+}
+#tyfanbjaij .gt_font_bold {
+font-weight: bold;
+}
+#tyfanbjaij .gt_font_italic {
+font-style: italic;
+}
+#tyfanbjaij .gt_super {
+font-size: 65%;
+}
+#tyfanbjaij .gt_footnote_marks {
+font-size: 75%;
+vertical-align: 0.4em;
+position: initial;
+}
+#tyfanbjaij .gt_asterisk {
+font-size: 100%;
+vertical-align: 0;
+}
+#tyfanbjaij .gt_indent_1 {
+text-indent: 5px;
+}
+#tyfanbjaij .gt_indent_2 {
+text-indent: 10px;
+}
+#tyfanbjaij .gt_indent_3 {
+text-indent: 15px;
+}
+#tyfanbjaij .gt_indent_4 {
+text-indent: 20px;
+}
+#tyfanbjaij .gt_indent_5 {
+text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="CDM name">CDM name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Cohort">Cohort</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome type">Outcome type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome name">Outcome name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="Number records">Number records</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="Number events">Number events</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="Restricted mean survival">Restricted mean survival</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left;">mock</td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Mgus diagnosis</td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Progression</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">1,384</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">106</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">35.00</td></tr>
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000;"></td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Competing outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Death cohort</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">1,384</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">869</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">260.00</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
 </div>
 <div id="with-stratification" class="section level2">
 <h2>With stratification</h2>
@@ -466,21 +881,467 @@ probability.</p>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>             <span class="at">facet =</span> <span class="st">&quot;strata_level&quot;</span>,</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>             <span class="at">colour =</span> <span class="st">&quot;variable_level&quot;</span>,</span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>             <span class="at">cumulativeFailure =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,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" width="100%" /></p>
 <p>And we also now have summary statistics for each of the strata as
 well as overall.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">tableSurvival</span>(MGUS_death_prog, <span class="at">times =</span> <span class="fu">c</span>(<span class="dv">50</span>,<span class="dv">150</span>,<span class="dv">365</span>))</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 11</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a><span class="co">#&gt;   cdm_name cohort   variable_level analysis_type outcome competing_outcome sex  </span></span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;          &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt; 1 mock     mgus_di… progression    competing_ri… progre… death_cohort      over…</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; 2 mock     mgus_di… death_cohort   competing_ri… progre… death_cohort      over…</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; 3 mock     mgus_di… progression    competing_ri… progre… death_cohort      F    </span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; 4 mock     mgus_di… progression    competing_ri… progre… death_cohort      M    </span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; 5 mock     mgus_di… death_cohort   competing_ri… progre… death_cohort      F    </span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; 6 mock     mgus_di… death_cohort   competing_ri… progre… death_cohort      M    </span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: number_records &lt;dbl&gt;, `50 days survival estimate` &lt;chr&gt;,</span></span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; #   `150 days survival estimate` &lt;chr&gt;, `365 days survival estimate` &lt;chr&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">tableSurvival</span>(MGUS_death_prog)</span></code></pre></div>
+<div id="lkubgpqsgz" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#lkubgpqsgz table {
+font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+#lkubgpqsgz thead, #lkubgpqsgz tbody, #lkubgpqsgz tfoot, #lkubgpqsgz tr, #lkubgpqsgz td, #lkubgpqsgz th {
+border-style: none;
+}
+#lkubgpqsgz p {
+margin: 0;
+padding: 0;
+}
+#lkubgpqsgz .gt_table {
+display: table;
+border-collapse: collapse;
+line-height: normal;
+margin-left: auto;
+margin-right: auto;
+color: #333333;
+font-size: 16px;
+font-weight: normal;
+font-style: normal;
+background-color: #FFFFFF;
+width: auto;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #A8A8A8;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #A8A8A8;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_caption {
+padding-top: 4px;
+padding-bottom: 4px;
+}
+#lkubgpqsgz .gt_title {
+color: #333333;
+font-size: 125%;
+font-weight: initial;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-color: #FFFFFF;
+border-bottom-width: 0;
+}
+#lkubgpqsgz .gt_subtitle {
+color: #333333;
+font-size: 85%;
+font-weight: initial;
+padding-top: 3px;
+padding-bottom: 5px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-color: #FFFFFF;
+border-top-width: 0;
+}
+#lkubgpqsgz .gt_heading {
+background-color: #FFFFFF;
+text-align: center;
+border-bottom-color: #FFFFFF;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_bottom_border {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_col_headings {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_col_heading {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: normal;
+text-transform: inherit;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 6px;
+padding-left: 5px;
+padding-right: 5px;
+overflow-x: hidden;
+}
+#lkubgpqsgz .gt_column_spanner_outer {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: normal;
+text-transform: inherit;
+padding-top: 0;
+padding-bottom: 0;
+padding-left: 4px;
+padding-right: 4px;
+}
+#lkubgpqsgz .gt_column_spanner_outer:first-child {
+padding-left: 0;
+}
+#lkubgpqsgz .gt_column_spanner_outer:last-child {
+padding-right: 0;
+}
+#lkubgpqsgz .gt_column_spanner {
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: bottom;
+padding-top: 5px;
+padding-bottom: 5px;
+overflow-x: hidden;
+display: inline-block;
+width: 100%;
+}
+#lkubgpqsgz .gt_spanner_row {
+border-bottom-style: hidden;
+}
+#lkubgpqsgz .gt_group_heading {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+text-align: left;
+}
+#lkubgpqsgz .gt_empty_group_heading {
+padding: 0.5px;
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+vertical-align: middle;
+}
+#lkubgpqsgz .gt_from_md > :first-child {
+margin-top: 0;
+}
+#lkubgpqsgz .gt_from_md > :last-child {
+margin-bottom: 0;
+}
+#lkubgpqsgz .gt_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+margin: 10px;
+border-top-style: solid;
+border-top-width: 1px;
+border-top-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 1px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 1px;
+border-right-color: #D3D3D3;
+vertical-align: middle;
+overflow-x: hidden;
+}
+#lkubgpqsgz .gt_stub {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+}
+#lkubgpqsgz .gt_stub_row_group {
+color: #333333;
+background-color: #FFFFFF;
+font-size: 100%;
+font-weight: initial;
+text-transform: inherit;
+border-right-style: solid;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+padding-left: 5px;
+padding-right: 5px;
+vertical-align: top;
+}
+#lkubgpqsgz .gt_row_group_first td {
+border-top-width: 2px;
+}
+#lkubgpqsgz .gt_row_group_first th {
+border-top-width: 2px;
+}
+#lkubgpqsgz .gt_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#lkubgpqsgz .gt_first_summary_row {
+border-top-style: solid;
+border-top-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_first_summary_row.thick {
+border-top-width: 2px;
+}
+#lkubgpqsgz .gt_last_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_grand_summary_row {
+color: #333333;
+background-color: #FFFFFF;
+text-transform: inherit;
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#lkubgpqsgz .gt_first_grand_summary_row {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-top-style: double;
+border-top-width: 6px;
+border-top-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_last_grand_summary_row_top {
+padding-top: 8px;
+padding-bottom: 8px;
+padding-left: 5px;
+padding-right: 5px;
+border-bottom-style: double;
+border-bottom-width: 6px;
+border-bottom-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_striped {
+background-color: rgba(128, 128, 128, 0.05);
+}
+#lkubgpqsgz .gt_table_body {
+border-top-style: solid;
+border-top-width: 2px;
+border-top-color: #D3D3D3;
+border-bottom-style: solid;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_footnotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_footnote {
+margin: 0px;
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#lkubgpqsgz .gt_sourcenotes {
+color: #333333;
+background-color: #FFFFFF;
+border-bottom-style: none;
+border-bottom-width: 2px;
+border-bottom-color: #D3D3D3;
+border-left-style: none;
+border-left-width: 2px;
+border-left-color: #D3D3D3;
+border-right-style: none;
+border-right-width: 2px;
+border-right-color: #D3D3D3;
+}
+#lkubgpqsgz .gt_sourcenote {
+font-size: 90%;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 5px;
+padding-right: 5px;
+}
+#lkubgpqsgz .gt_left {
+text-align: left;
+}
+#lkubgpqsgz .gt_center {
+text-align: center;
+}
+#lkubgpqsgz .gt_right {
+text-align: right;
+font-variant-numeric: tabular-nums;
+}
+#lkubgpqsgz .gt_font_normal {
+font-weight: normal;
+}
+#lkubgpqsgz .gt_font_bold {
+font-weight: bold;
+}
+#lkubgpqsgz .gt_font_italic {
+font-style: italic;
+}
+#lkubgpqsgz .gt_super {
+font-size: 65%;
+}
+#lkubgpqsgz .gt_footnote_marks {
+font-size: 75%;
+vertical-align: 0.4em;
+position: initial;
+}
+#lkubgpqsgz .gt_asterisk {
+font-size: 100%;
+vertical-align: 0;
+}
+#lkubgpqsgz .gt_indent_1 {
+text-indent: 5px;
+}
+#lkubgpqsgz .gt_indent_2 {
+text-indent: 10px;
+}
+#lkubgpqsgz .gt_indent_3 {
+text-indent: 15px;
+}
+#lkubgpqsgz .gt_indent_4 {
+text-indent: 20px;
+}
+#lkubgpqsgz .gt_indent_5 {
+text-indent: 25px;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="CDM name">CDM name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Cohort">Cohort</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Sex">Sex</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome type">Outcome type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome name">Outcome name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="Number records">Number records</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="Number events">Number events</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="Restricted mean survival">Restricted mean survival</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left;">mock</td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Mgus diagnosis</td>
+<td headers="Sex" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Overall</td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Progression</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">1,384</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">106</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">35.00</td></tr>
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000;"></td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Sex" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Competing outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Death cohort</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">1,384</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">869</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">260.00</td></tr>
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000;"></td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Sex" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">F</td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Progression</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">631</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">55</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">40.00</td></tr>
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000;"></td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Sex" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">M</td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Progression</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">753</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">51</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">29.00</td></tr>
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000;"></td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Sex" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">F</td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Competing outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Death cohort</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">631</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">374</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">245.00</td></tr>
+    <tr><td headers="CDM name" class="gt_row gt_left" style="text-align: left; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000;"></td>
+<td headers="Cohort" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: hidden; border-top-color: #000000; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;"></td>
+<td headers="Sex" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">M</td>
+<td headers="Outcome type" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Competing outcome</td>
+<td headers="Outcome name" class="gt_row gt_left" style="text-align: left; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">Death cohort</td>
+<td headers="[header_level]Number records" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">753</td>
+<td headers="[header_level]Number events" class="gt_row gt_right" style="text-align: right; border-left-width: 1px; border-left-style: solid; border-left-color: #D3D3D3; border-right-width: 1px; border-right-style: solid; border-right-color: #D3D3D3; border-top-width: 1px; border-top-style: solid; border-top-color: #D3D3D3; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #D3D3D3;">495</td>
+<td headers="[header_level]Restricted mean survival" class="gt_row gt_right" style="text-align: right;">272.00</td></tr>
+  </tbody>
+  
+  
+</table>
+</div>
 </div>
 <div id="summarising-participants" class="section level2">
 <h2>Summarising participants</h2>

@@ -1,6 +1,7 @@
 ## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE, warning = FALSE, message = FALSE,
+  out.width = "100%",
   comment = "#>"
 )
 
@@ -34,12 +35,13 @@ MGUS_death_prog %>%
   asSurvivalResult() %>% 
   glimpse()
 
-## -----------------------------------------------------------------------------
+## ----out.width = "75%"--------------------------------------------------------
 plotSurvival(MGUS_death_prog, cumulativeFailure = TRUE,
-             colour = "variable_level")
+             colour = "variable_level") + 
+  theme(legend.position = "top")
 
 ## -----------------------------------------------------------------------------
-tableSurvival(MGUS_death_prog, times = c(100,200,300,400)) 
+tableSurvival(MGUS_death_prog) 
 
 ## -----------------------------------------------------------------------------
 MGUS_death_prog <-  estimateCompetingRiskSurvival(cdm,
@@ -58,7 +60,7 @@ plotSurvival(MGUS_death_prog %>%
              cumulativeFailure = TRUE)
 
 ## -----------------------------------------------------------------------------
-tableSurvival(MGUS_death_prog, times = c(50,150,365))
+tableSurvival(MGUS_death_prog)
 
 ## -----------------------------------------------------------------------------
 MGUS_death_prog <- estimateCompetingRiskSurvival(cdm,
