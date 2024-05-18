@@ -1,5 +1,5 @@
-1befffe7e928a5a200938bc97774e34f *DESCRIPTION
-86bcabf5006479b0b177a7334f5e508a *NAMESPACE
+bb34b9aa5e1834e137281b369d2aab8e *DESCRIPTION
+8cca977a89b88d76979147881a935ee4 *NAMESPACE
 bc225ff2d80661d284a2d30b7c18f693 *R/CohortSurvival-package.R
 e102242696a91c4ec3a72f7f237888d0 *R/addCohortSurvival.R
 823ed67b4583e36707ec0ec0fd4e1c32 *R/asSurvivalResult.R
@@ -11,7 +11,6 @@ e102242696a91c4ec3a72f7f237888d0 *R/addCohortSurvival.R
 cdbdcaa50da2462e0327db8e7bc0ef0e *R/mockMGUS2cdm.R
 cce7d2b82c473970bc1cc3b18a987fe4 *R/plotSurvival.R
 3bfae3edb5ddfc10e4b8a8851acf766b *R/recordAttrition.R
-0df3eaef4a88d8876b6fec56dff2d62e *R/summariseSurvivalParticipants.R
 a3bb387a7188ed9733c08b28d6439338 *R/suppressSurvivalCounts.R
 63ff41782d9a5059824ca451ad367c59 *R/tableSurvival.R
 b56ff2b193ecba52f9ec7f3b10cca008 *R/utils-pipe.R
@@ -22,13 +21,13 @@ a3f6bc4d0d1c124ec8208b527c8a6d2d *R/utils.R
 2dd237ac867d17254f6a983a00a17e63 *inst/WORDLIST
 a968997d285c8490c15bf18fa34a5221 *inst/doc/a01_Single_event_of_interest.R
 a98b500caba6713f572fe66de4cb6d1c *inst/doc/a01_Single_event_of_interest.Rmd
-e9a9d7acf07a26ec316a4ea69106cf34 *inst/doc/a01_Single_event_of_interest.html
+fb3ae9f5affb613cfa0459a89f956061 *inst/doc/a01_Single_event_of_interest.html
 3cd5437cb0d2ebdae17fca172b623d5e *inst/doc/a02_Competing_risk_survival.R
 b798e93ec3629392eac846f5cc003d02 *inst/doc/a02_Competing_risk_survival.Rmd
-ae097f5cc83c83feeb312d66485b74ad *inst/doc/a02_Competing_risk_survival.html
+66c470e9352509d57fff671e2e6dc935 *inst/doc/a02_Competing_risk_survival.html
 f17916b9c5230860567f1878ec94b028 *inst/doc/a03_Further_survival_analyses.R
 98fba1375bcae24a0b5c1655eaad49bc *inst/doc/a03_Further_survival_analyses.Rmd
-94a44f6fe0082fe4898bcc2ddd9446b5 *inst/doc/a03_Further_survival_analyses.html
+9f6ad69bcdc83fed8c623f3d727e6d1c *inst/doc/a03_Further_survival_analyses.html
 bd4d1ef535c20e855f38c0060b4ea85c *man/CohortSurvival-package.Rd
 043baecb602fdd978f2fe2103bab4a5c *man/addCohortSurvival.Rd
 2b4a932d022bb9c16a6a54470877f786 *man/addCompetingRiskCohortSurvival.Rd
@@ -50,7 +49,6 @@ bdf609bacc502d01aa37f121189e90df *man/generateDeathCohortSet.Rd
 7eff263a0afecc9d12e207863a92617d *man/optionsTableSurvival.Rd
 8f4aad003a999fae004ba9361f9a99d6 *man/pipe.Rd
 2425d74d88b5022702054c5efb589e6e *man/plotSurvival.Rd
-79edb3229f83aefd8dc695cd175cdbf4 *man/reexports.Rd
 1d4c10a79a539d5907e4750b31b77e38 *man/survivalParticipants.Rd
 ba900c49e6567654b93bd50106abd29a *man/tableSurvival.Rd
 6b75814f4282d0e86961ee3bfd2fa89d *man/tidyeval.Rd
@@ -62,7 +60,6 @@ be4ed96cc827e0b5f5cee2077074bd34 *tests/testthat/test-deathDiagnostics.R
 d1341708231ebe6598d759e169b61091 *tests/testthat/test-generateDeathCohort.R
 bfb5ddefea8b0443094c0c22548c5148 *tests/testthat/test-mockMGUS2cdm.R
 cd516521d8e0a140b8237b3c1d02fa23 *tests/testthat/test-plotSurvival.R
-facd54ff9b3edb64300e4b1ad7d51d41 *tests/testthat/test-summariseSurvivalParticipants.R
 010bca05836c997aa7f3c19c2c580706 *tests/testthat/test-tableSurvival.R
 a98b500caba6713f572fe66de4cb6d1c *vignettes/a01_Single_event_of_interest.Rmd
 b798e93ec3629392eac846f5cc003d02 *vignettes/a02_Competing_risk_survival.Rmd

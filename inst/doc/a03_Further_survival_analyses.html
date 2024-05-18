@@ -378,20 +378,20 @@ columns previously added to the cohort by the user.</p>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.10.3-dev163 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v0.10.3-dev797 [eburn@Windows 10 x64:R 4.2.1/:memory:]</span></span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 1, 2, 4, 5, 6, 10, 11, 12, 13, 16, 17, 18, 19, 20…</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 1, 2, 4, 5, 6, 10, 11, 12, 13, 15, 17, 18, 19, 20…</span></span>
 <span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-01, 1968-01-01, 1977-01-01, 1973-01-01, …</span></span>
 <span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1981-01-01, 1968-01-01, 1977-01-01, 1973-01-01, …</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 88, 78, 68, 90, 90, 79, 86, 89, 87, 90, 94, 86, 8…</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, F, M, F, M, F, M, F, M, F, F, M, M, M, F, F, M…</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 88, 78, 68, 90, 90, 79, 86, 89, 87, 85, 94, 86, 8…</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, F, M, F, M, F, M, F, M, M, F, M, M, M, F, F, F…</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 13.1, 11.5, 15.2, 10.7, 12.9, 9.4, 11.8, 11.3, 11…</span></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.30, 1.20, 1.20, 0.80, 1.00, 1.10, 1.00, 1.30, 1…</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.5, 2.0, 1.2, 1.0, 0.5, 2.3, 2.3, 1.2, 1.3, 0.5,…</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.5, 2.0, 1.2, 1.0, 0.5, 2.3, 2.3, 1.2, 1.3, 1.0,…</span></span>
 <span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;…</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;dbl&gt; 30, 25, 92, 8, 4, 136, 2, 108, 10, 43, 34, 67, 16…</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;int&gt; 30, 25, 92, 8, 4, 136, 2, 108, 10, 18, 34, 67, 16…</span></span>
 <span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; $ status               &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 30, 25, 92, 8, 4, 136, 2, 108, 10, 43, 34, 67, 16…</span></span></code></pre></div>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 30, 25, 92, 8, 4, 136, 2, 108, 10, 18, 34, 67, 16…</span></span></code></pre></div>
 <p>This information should be enough to call any advanced function,
 like:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>survival<span class="sc">::</span><span class="fu">coxph</span>(survival<span class="sc">::</span><span class="fu">Surv</span>(time, status) <span class="sc">~</span> age <span class="sc">+</span> sex, <span class="at">data =</span> input_survival_single)</span>
@@ -435,17 +435,17 @@ time, censoring on a specific date, washout periods, or others.</p>
 <span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; Rows: 1,384</span></span>
 <span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
 <span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 56, 124, 127, 147, 163, 167, 186, 195, 206, 229, …</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;dbl&gt; 56, 124, 127, 147, 163, 167, 180, 186, 195, 206, …</span></span>
 <span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1978-01-01, 1974-01-01, 1978-01-01, 1975-01-01, …</span></span>
 <span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1978-01-01, 1974-01-01, 1978-01-01, 1975-01-01, …</span></span>
-<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 78, 73, 73, 58, 57, 54, 76, 54, 79, 62, 72, 73, 6…</span></span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; M, M, M, M, F, F, F, F, M, M, M, F, M, F, M, M, M…</span></span>
-<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 10.3, 15.3, 12.4, 13.1, 12.2, 11.1, 12.8, 10.0, 1…</span></span>
-<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 3.00, 1.20, 1.60, 1.10, 0.80, 1.10, 0.90, 1.10, 1…</span></span>
-<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 1.9, 1.7, 1.4, 0.8, 1.9, 2.0, 1.9, 1.8, 2.1, 1.3,…</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 78, 73, 73, 58, 57, 54, 70, 76, 54, 79, 67, 62, 7…</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; M, M, M, M, F, F, F, F, F, M, M, M, M, F, M, F, M…</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 10.3, 15.3, 12.4, 13.1, 12.2, 11.1, 14.3, 12.8, 1…</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 3.0, 1.2, 1.6, 1.1, 0.8, 1.1, 1.2, 0.9, 1.1, 1.1,…</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 1.9, 1.7, 1.4, 0.8, 1.9, 2.0, 1.6, 1.9, 1.8, 2.1,…</span></span>
 <span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&lt;70&quot;, &quot;&lt;70&quot;, &quot;&gt;=7…</span></span>
-<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;dbl&gt; 44, 82, 60, 189, 260, 172, 104, 171, 11, 54, 122,…</span></span>
-<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 29, 80, 30, 188, 201, 118, 51, 153, 8, 21, 101, 1…</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;int&gt; 44, 82, 60, 189, 260, 172, 107, 104, 171, 11, 206…</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 29, 80, 30, 188, 201, 118, 81, 51, 153, 8, 190, 2…</span></span>
 <span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; $ status               &lt;fct&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span></code></pre></div>
 <p>We can use the package <code>cmprsk</code> to fit a Fine and Gray
 model to the competing risk data. We first change our <code>sex</code>
