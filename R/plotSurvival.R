@@ -25,7 +25,8 @@
 #' @param ribbon If TRUE, the plot will join points using a ribbon
 #' @param facet Variables to use for facets
 #' @param colour Variables to use for colours
-#' @param colourName Colour legend name
+#' @param riskTable Whether to print risk table below the plot
+#' @param riskInterval Interval of time to print risk table below the plot
 #'
 #' @return A plot of survival probabilities over time
 #' @export
@@ -42,24 +43,22 @@
 plotSurvival <- function(result,
                          x = "time",
                          xscale = "days",
-                         ylim = c(0,NA),
+                         ylim = c(0, NA),
                          cumulativeFailure = FALSE,
                          ribbon = TRUE,
                          facet = NULL,
                          colour = NULL,
-                         colourName = NULL){
-
+                         riskTable = FALSE,
+                         riskInterval = 30) {
 
   result <- result %>%
     asSurvivalResult()
 
-  # cumulativeFailure must be true for competing risk analysis
-  if(isFALSE(cumulativeFailure) &&
-     "cumulative_failure_probability" %in% unique(result$variable_name)){
+  if (isFALSE(cumulativeFailure) && "cumulative_failure_probability" %in% unique(result$variable_name)) {
     cli::cli_abort("cumulativeFailure must be TRUE if result comes from a competing risk analysis")
   }
 
-  if(cumulativeFailure) {
+  if (cumulativeFailure) {
     result <- result %>%
       dplyr::mutate(
         estimate_value = dplyr::if_else(.data$variable_name == "cumulative_failure_probability",
@@ -71,31 +70,183 @@ plotSurvival <- function(result,
     plot_name <- "Survival probability"
   }
 
- plot <- plotEstimates(result,
-                x = x,
-                xscale = xscale,
-                y = "estimate",
-                yLower = "estimate_95CI_lower",
-                yUpper = "estimate_95CI_upper",
-                ylim = ylim,
-                ytype = "count",
-                ribbon = ribbon,
-                facet = facet,
-                colour = colour,
-                colourName = colourName) +
+  plot <- plotEstimates(result,
+                        x = x,
+                        xscale = xscale,
+                        y = "estimate",
+                        yLower = "estimate_95CI_lower",
+                        yUpper = "estimate_95CI_upper",
+                        ylim = ylim,
+                        ytype = "count",
+                        ribbon = ribbon,
+                        facet = facet,
+                        colour = colour) +
     ggplot2::ylab(plot_name)
 
-  if(xscale == "years"){
-    plot <- plot+
-      ggplot2::xlab("Time in years")+
+  if (xscale == "years") {
+    plot <- plot +
+      ggplot2::xlab("Time in years") +
       ggplot2::scale_x_continuous(breaks = function(x) unique(floor(pretty(seq(0, (max(x) + 1) * 1.1)))))
   } else {
-    plot <- plot+
+    plot <- plot +
       ggplot2::xlab("Time in days")
   }
 
- return(plot)
+  if (riskTable) {
+    max_t <- result %>%
+      dplyr::pull(.data$time) %>%
+      max()
 
+    riskTimes <- seq(0, max_t, by = riskInterval)
+
+    if (!is.null(facet)) {
+      result <- result %>%
+        dplyr::mutate(!!facet := gsub("&&&","and",result[[facet]]))
+      attr(result, "events") <- attr(result, "events") %>%
+        dplyr::mutate(!!facet := gsub("&&&","and",attr(result, "events")[[facet]]))
+
+      facetLevels <- unique(result[[facet]])
+
+      plotList <- list()
+
+      applyPlot <- function(plotList, level) {
+        subResult <- result %>%
+          dplyr::filter(!!rlang::sym(facet) == level) %>%
+          dplyr::compute()
+        attr(subResult, "events") <- attr(result, "events") %>%
+          dplyr::filter(!!rlang::sym(facet) == level) %>%
+          dplyr::compute()
+
+        facetPlot <- plotEstimates(subResult,
+                                   x = x,
+                                   xscale = xscale,
+                                   y = "estimate",
+                                   yLower = "estimate_95CI_lower",
+                                   yUpper = "estimate_95CI_upper",
+                                   ylim = ylim,
+                                   ytype = "count",
+                                   ribbon = ribbon,
+                                   facet = NULL,
+                                   colour = colour) +
+          ggplot2::ggtitle(level)
+
+        riskData <- generateRiskData(subResult, riskTimes, colour)
+
+        if (nrow(riskData) == 0) {
+          cli::cli_abort("Check the riskInterval provided. It seems that interval
+                        does not provide the times for which n_risk can be retrieved.
+                        Check the `events` attribute from your asSurvivalResult()
+                        object to know the times at which `n_risk` information is
+                        available")
+        }
+
+        names_risk <- riskData %>%
+          dplyr::select(-c(dplyr::starts_with("time"))) %>%
+          colnames()
+
+        nameRisk <- paste0("p",as.character(level))
+        assign(nameRisk, riskData %>%
+                 tidyr::pivot_longer(c(names_risk, .data$time), names_to = "layer", values_to = "label") %>%
+                 ggplot2::ggplot(ggplot2::aes(x = .data$timeb)) +
+                 ggplot2::geom_text(ggplot2::aes(y = factor(.data$layer, c(names_risk, "time")), label = dplyr::if_else(is.na(.data$label), sprintf("NA"), .data$label))) +
+                 ggplot2::labs(y = "", x = NULL) +
+                 ggplot2::theme_minimal() +
+                 ggplot2::theme(axis.line = ggplot2::element_blank(), axis.ticks = ggplot2::element_blank(), axis.text.x = ggplot2::element_blank(),
+                                panel.grid = ggplot2::element_blank(), strip.text = ggplot2::element_blank())
+        )
+
+        plotList[[as.character(level)]] <- facetPlot / get(nameRisk) + patchwork::plot_layout(heights = c(8, 1))
+        return(plotList)
+      }
+
+      plotList <- purrr::reduce(facetLevels, applyPlot, .init = plotList)
+
+      finalPlot <- patchwork::wrap_plots(plotList)
+      return(finalPlot)
+    } else {
+      riskData <- generateRiskData(result, riskTimes, colour)
+
+      if (nrow(riskData) == 0) {
+        cli::cli_abort("Check the riskInterval provided. It seems that interval
+                      does not provide the times for which n_risk can be retrieved.
+                      Check the `events` attribute from your asSurvivalResult()
+                      object to know the times at which `n_risk` information is
+                      available")
+      }
+
+      names_risk <- riskData %>%
+        dplyr::select(-c(dplyr::starts_with("time"))) %>%
+        colnames()
+
+      p2 <- riskData %>%
+        tidyr::pivot_longer(c(names_risk, .data$time), names_to = "layer", values_to = "label") %>%
+        ggplot2::ggplot(ggplot2::aes(x = .data$timeb)) +
+        ggplot2::geom_text(ggplot2::aes(y = factor(.data$layer, c(names_risk, "time")), label = dplyr::if_else(is.na(.data$label), sprintf("NA"), .data$label))) +
+        ggplot2::labs(y = "", x = NULL) +
+        ggplot2::theme_minimal() +
+        ggplot2::theme(axis.line = ggplot2::element_blank(), axis.ticks = ggplot2::element_blank(), axis.text.x = ggplot2::element_blank(),
+                       panel.grid = ggplot2::element_blank(), strip.text = ggplot2::element_blank())
+
+      plot <- plot / p2 + patchwork::plot_layout(heights = c(8, 1))
+    }
+  }
+
+  return(plot)
+}
+
+generateRiskData <- function(result, riskTimes, colour) {
+  if (is.null(colour)) {
+    riskdata <- attr(result, "events") %>%
+      dplyr::filter(.data$estimate_name == "n_risk",
+                    .data$time %in% riskTimes) %>%
+      dplyr::mutate(n_risk = as.character(.data$estimate_value)) %>%
+      dplyr::select("time", "n_risk") %>%
+      dplyr::mutate(timeb = .data$time,
+                    time = as.character(.data$time))
+
+    riskdataend <- dplyr::tibble(
+      time = as.character(riskTimes),
+      timeb = riskTimes
+    ) %>%
+      dplyr::filter(!(.data$time %in% (riskdata %>% dplyr::pull("time"))))
+
+    for (i in colnames(riskdata %>% dplyr::select(dplyr::starts_with("n_risk")))) {
+      riskdataend <- riskdataend %>%
+        dplyr::mutate(!!i := as.character(NA))
+    }
+
+    riskdata <- dplyr::union_all(riskdata, riskdataend) %>%
+      dplyr::mutate(n_risk = dplyr::if_else(is.na(.data$n_risk), "", .data$n_risk))
+  } else {
+    riskdata <- attr(result, "events") %>%
+      dplyr::filter(.data$estimate_name == "n_risk",
+                    .data$time %in% riskTimes) %>%
+      dplyr::mutate(n_risk = as.character(.data$estimate_value)) %>%
+      dplyr::select("time", "n_risk", colour) %>%
+      dplyr::mutate(!!colour := stringr::str_replace_all(.data[[colour]], "&&&", "and")) %>%
+      dplyr::mutate(timeb = .data$time,
+                    time = as.character(.data$time),
+                    !!colour := paste0("n_risk_", .data[[colour]])) %>%
+      dplyr::distinct() %>%
+      tidyr::pivot_wider(names_from = colour, values_from = .data$n_risk)
+
+    riskdataend <- dplyr::tibble(
+      time = as.character(riskTimes),
+      timeb = riskTimes
+    ) %>%
+      dplyr::filter(!(.data$time %in% (riskdata %>% dplyr::pull("time"))))
+
+    for (i in colnames(riskdata %>% dplyr::select(dplyr::starts_with("n_risk")))) {
+      riskdataend <- riskdataend %>%
+        dplyr::mutate(!!i := as.character(NA))
+    }
+
+    riskdata <- dplyr::union_all(riskdata, riskdataend) %>%
+      dplyr::mutate(dplyr::across(dplyr::everything(), ~ tidyr::replace_na(.x, "")))
+
+    names(riskdata) <- gsub("n risk ", "", gsub("_", " ", names(riskdata)))
+  }
+  return(riskdata)
 }
 
 # helper functions
@@ -109,8 +260,7 @@ plotEstimates <- function(result,
                           ytype,
                           ribbon,
                           facet,
-                          colour,
-                          colourName){
+                          colour){
 
   errorMessage <- checkmate::makeAssertCollection()
   checkmate::assert_character(xscale, len = 1)
@@ -127,8 +277,6 @@ plotEstimates <- function(result,
     plot_data <- plot_data %>%
       dplyr::mutate(time = .data$time / 365.25)
   }
-
-
 
   if(is.null(colour)){
     plot <- plot_data %>%

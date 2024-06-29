@@ -71,8 +71,10 @@ test_that("survival summary", {
         '[header]CDM name\n[header_level]mock\n[header]Cohort\n[header_level]Mgus diagnosis')))
 
   # In years
-  expect_true(all(tableSurvival(surv, times = c(365,420), type = "tibble") ==
-                    tableSurvival(surv, times = c(1,1.15), timeScale = "years", type = "tibble")))
+  expect_true(all(tableSurvival(surv, times = c(365,420), type = "tibble") %>%
+                    dplyr::select(-dplyr::contains("mean"), -dplyr::contains("median")) ==
+                    tableSurvival(surv, times = c(1,1.15), timeScale = "years", type = "tibble") %>%
+                    dplyr::select(-dplyr::contains("mean"), -dplyr::contains("median")) ))
 
   CDMConnector::cdmDisconnect(cdm)
 

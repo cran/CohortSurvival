@@ -13,7 +13,8 @@ plotSurvival(
   ribbon = TRUE,
   facet = NULL,
   colour = NULL,
-  colourName = NULL
+  riskTable = FALSE,
+  riskInterval = 30
 )
 }
 \arguments{
@@ -34,7 +35,9 @@ instead of the survival probability}
 
 \item{colour}{Variables to use for colours}
 
-\item{colourName}{Colour legend name}
+\item{riskTable}{Whether to print risk table below the plot}
+
+\item{riskInterval}{Interval of time to print risk table below the plot}
 }
 \value{
 A plot of survival probabilities over time

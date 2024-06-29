@@ -15,7 +15,7 @@ test_that("mgus example: no Competing risk", {
   ) %>% asSurvivalResult()
   expect_true(tibble::is_tibble(surv))
   expect_true(all(c(
-    "cdm_name","result_type",
+    "cdm_name", "result_type",
     "cohort",
     "strata_name", "strata_level",
     "variable_name","variable_level",
@@ -2172,7 +2172,7 @@ test_that("restrictedMeanFollowUp", {
   CDMConnector::cdm_disconnect(cdm)
 })
 
-test_that("no outcomes among cohort", {
+  test_that("no outcomes among cohort", {
 
   cdm <- mockMGUS2cdm()
   cdm$death_cohort <- cdm$death_cohort |>
@@ -2194,3 +2194,60 @@ test_that("no outcomes among cohort", {
   ))
 
 })
+
+
+  test_that("mgus example: empty outcome tables or cohorts", {
+    cdm <- mockMGUS2cdm()
+    cdm$death_c <- cdm$death_cohort %>%
+      dplyr::filter(cohort_definition_id == 2) %>%
+      dplyr::compute(name = "death_c")
+    attr(cdm$death_c, "cohort_set") <- dplyr::tibble(
+      cohort_definition_id = 1,
+      cohort_name = "death_c"
+    )
+    attr(cdm$death_c, "cohort_attrition") <- omopgenerics:::defaultCohortAttrition(cdm$death_c, attr(cdm$death_c, "cohort_set"))
+    attr(cdm$death_c, "tbl_name") <- "death_c"
+
+    # Whole empty table throws warning for outcome
+    expect_warning(estimateSingleEventSurvival(cdm, targetCohortTable = "mgus_diagnosis",
+                                             outcomeCohortTable = "death_c"))
+
+    # and error for target
+    expect_error(estimateSingleEventSurvival(cdm, targetCohortTable = "death_c",
+                                             outcomeCohortTable = "mgus_diagnosis"))
+
+    # Some empty cohortIds are just not calculated, for both primary and competing outcomes
+    attr(cdm$death_cohort, "cohort_set") <- dplyr::tibble(
+      cohort_definition_id = c(1,3),
+      cohort_name = c("death_cohort", "death_test_empty")
+    )
+    attr(cdm$death_cohort, "cohort_attrition") <- omopgenerics:::defaultCohortAttrition(cdm$death_cohort, attr(cdm$death_cohort, "cohort_set"))
+    attr(cdm$progression, "cohort_set") <- dplyr::tibble(
+      cohort_definition_id = c(1,2),
+      cohort_name = c("progression", "progression_fake_empty")
+    )
+    attr(cdm$progression, "cohort_attrition") <- omopgenerics:::defaultCohortAttrition(cdm$progression, attr(cdm$progression, "cohort_set"))
+
+    expect_warning(emptyResultBis <- estimateSingleEventSurvival(cdm, targetCohortTable = "mgus_diagnosis",
+                                                  outcomeCohortTable = "death_cohort",
+                                                  outcomeCohortId = c(1,3)))
+    expect_true(all(emptyResultBis %>%
+                  dplyr::filter(variable_level == "death_test_empty" & variable_name == "survival_probability") %>%
+                  dplyr::pull("estimate_value") == c(1)))
+
+    expect_warning(emptyResultBisBis <- estimateCompetingRiskSurvival(cdm, targetCohortTable = "mgus_diagnosis",
+                                                       outcomeCohortTable = "progression",
+                                                       outcomeCohortId = c(1,2),
+                                                       competingOutcomeCohortTable = "death_cohort",
+                                                       competingOutcomeCohortId = c(1,3)))
+
+    expect_true(emptyResultBisBis %>%
+                  dplyr::select(variable_level) %>%
+                  dplyr::distinct() %>%
+                  dplyr::tally() %>%
+                  dplyr::pull() == 2)
+
+    PatientProfiles::mockDisconnect(cdm)
+  })
+
+

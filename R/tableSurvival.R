@@ -152,6 +152,15 @@ tableSurvival <- function(x,
     dplyr::arrange(.data$estimate_name) %>%
     dplyr::mutate("estimate_name" = as.character(.data$estimate_name))
 
+  if(timeScale == "years") {
+    summary_table <- summary_table %>%
+      dplyr::mutate(
+        "estimate_value" = dplyr::if_else(grepl("mean", .data$estimate_name) | grepl("median", .data$estimate_name),
+                                        as.character(round(as.numeric(.data$estimate_value)/365,3)),
+                                        .data$estimate_value)
+      )
+  }
+
   if (!is.null(times)) {
     summary_table <- summary_table %>%
       dplyr::bind_rows(summary_times %>% dplyr::select(!"time"))

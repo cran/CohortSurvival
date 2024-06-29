@@ -296,16 +296,37 @@ estimateCompetingRiskSurvival <- function(cdm,
       dplyr::pull("cohort_definition_id")
   }
   if (is.null(outcomeCohortId)) {
-    CDMConnector::assertTables(cdm, outcomeCohortTable)
+    CDMConnector::assertTables(cdm, outcomeCohortTable, empty.ok = TRUE)
     outcomeCohortId <- CDMConnector::cohort_count(cdm[[outcomeCohortTable]]) %>%
       dplyr::filter(.data$number_records >0) %>%
       dplyr::pull("cohort_definition_id")
   }
   if (is.null(competingOutcomeCohortId)) {
-    CDMConnector::assertTables(cdm, competingOutcomeCohortTable)
+    CDMConnector::assertTables(cdm, competingOutcomeCohortTable, empty.ok = TRUE)
     competingOutcomeCohortId <- CDMConnector::cohort_count(cdm[[competingOutcomeCohortTable]])  %>%
       dplyr::filter(.data$number_records >0) %>%
       dplyr::pull("cohort_definition_id")
+  }
+
+  emptyOutcomes <- omopgenerics::settings(cdm[[outcomeCohortTable]]) |>
+    dplyr::filter(.data$cohort_definition_id %in% .env$outcomeCohortId) |>
+    dplyr::left_join(
+      omopgenerics::cohortCount(cdm[[outcomeCohortTable]]),
+      by = "cohort_definition_id") |>
+    dplyr::filter(.data$number_records == 0)
+  emptyCompetingOutcomes <- omopgenerics::settings(cdm[[competingOutcomeCohortTable]]) |>
+    dplyr::filter(.data$cohort_definition_id %in% .env$competingOutcomeCohortId) |>
+    dplyr::left_join(
+      omopgenerics::cohortCount(cdm[[competingOutcomeCohortTable]]),
+      by = "cohort_definition_id") |>
+    dplyr::filter(.data$number_records == 0)
+  if(nrow(emptyOutcomes) > 0){
+    emptyOutcomenames <- emptyOutcomes |> dplyr::pull("cohort_name")
+    cli::cli_warn("Outcome cohort{?s} {emptyOutcomenames} {?is/are} empty")
+  }
+  if(nrow(emptyCompetingOutcomes) > 0){
+    emptyCompetingOutcomenames <- emptyCompetingOutcomes |> dplyr::pull("cohort_name")
+    cli::cli_warn("Competing outcome cohort{?s} {emptyCompetingOutcomenames} {?is/are} empty")
   }
 
   surv <- list()
