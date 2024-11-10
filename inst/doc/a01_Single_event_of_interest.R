@@ -59,13 +59,5 @@ plotSurvival(MGUS_death,
 tableSurvival(MGUS_death)
 
 ## -----------------------------------------------------------------------------
-MGUS_death <- estimateSingleEventSurvival(cdm,
-  targetCohortTable = "mgus_diagnosis",
-  outcomeCohortTable = "death_cohort",
-  returnParticipants = TRUE
-)
-survivalParticipants(MGUS_death)
-
-## -----------------------------------------------------------------------------
 cdm_disconnect(cdm)
 

@@ -63,14 +63,5 @@ plotSurvival(MGUS_death_prog %>%
 tableSurvival(MGUS_death_prog)
 
 ## -----------------------------------------------------------------------------
-MGUS_death_prog <- estimateCompetingRiskSurvival(cdm,
-  targetCohortTable = "mgus_diagnosis",
-  outcomeCohortTable = "progression",
-  competingOutcomeCohortTable = "death_cohort",
-  returnParticipants = TRUE
-) 
-survivalParticipants(MGUS_death_prog)
-
-## -----------------------------------------------------------------------------
 cdm_disconnect(cdm)
 

@@ -9,6 +9,7 @@ plotSurvival(
   x = "time",
   xscale = "days",
   ylim = c(0, NA),
+  xlim = NULL,
   cumulativeFailure = FALSE,
   ribbon = TRUE,
   facet = NULL,
@@ -25,6 +26,8 @@ plotSurvival(
 \item{xscale}{X axis scale. Can be "days" or "years".}
 
 \item{ylim}{Limits for the Y axis}
+
+\item{xlim}{Limits for the X axis}
 
 \item{cumulativeFailure}{whether to plot the cumulative failure probability
 instead of the survival probability}

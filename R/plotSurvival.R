@@ -20,6 +20,7 @@
 #' @param x Variable to plot on x axis
 #' @param xscale X axis scale. Can be "days" or "years".
 #' @param ylim Limits for the Y axis
+#' @param xlim Limits for the X axis
 #' @param cumulativeFailure whether to plot the cumulative failure probability
 #' instead of the survival probability
 #' @param ribbon If TRUE, the plot will join points using a ribbon
@@ -44,6 +45,7 @@ plotSurvival <- function(result,
                          x = "time",
                          xscale = "days",
                          ylim = c(0, NA),
+                         xlim = NULL,
                          cumulativeFailure = FALSE,
                          ribbon = TRUE,
                          facet = NULL,
@@ -51,17 +53,23 @@ plotSurvival <- function(result,
                          riskTable = FALSE,
                          riskInterval = 30) {
 
-  result <- result %>%
-    asSurvivalResult()
+  # Missing input checks
+   omopgenerics::assertNumeric(xlim, min = 1, length = 1, integerish = TRUE, null = TRUE)
+  if(is.null(xlim)) {xlim <- "Inf"}
 
-  if (isFALSE(cumulativeFailure) && "cumulative_failure_probability" %in% unique(result$variable_name)) {
+  result <- result %>%
+    asSurvivalResult() %>%
+    dplyr::filter(.data$time <= xlim) %>%
+    dplyr::compute()
+
+  if (isFALSE(cumulativeFailure) && "cumulative_failure_probability" %in% unique(result$result_type)) {
     cli::cli_abort("cumulativeFailure must be TRUE if result comes from a competing risk analysis")
   }
 
   if (cumulativeFailure) {
     result <- result %>%
       dplyr::mutate(
-        estimate_value = dplyr::if_else(.data$variable_name == "cumulative_failure_probability",
+        estimate_value = dplyr::if_else(.data$result_type == "cumulative_failure_probability",
                                         .data$estimate_value,
                                         1 - .data$estimate_value)
       )
@@ -155,7 +163,7 @@ plotSurvival <- function(result,
                                 panel.grid = ggplot2::element_blank(), strip.text = ggplot2::element_blank())
         )
 
-        plotList[[as.character(level)]] <- facetPlot / get(nameRisk) + patchwork::plot_layout(heights = c(8, 1))
+        plotList[[as.character(level)]] <- facetPlot / patchwork::wrap_elements(get(nameRisk)) + patchwork::plot_layout(heights = c(8, 1))
         return(plotList)
       }
 
@@ -187,7 +195,7 @@ plotSurvival <- function(result,
         ggplot2::theme(axis.line = ggplot2::element_blank(), axis.ticks = ggplot2::element_blank(), axis.text.x = ggplot2::element_blank(),
                        panel.grid = ggplot2::element_blank(), strip.text = ggplot2::element_blank())
 
-      plot <- plot / p2 + patchwork::plot_layout(heights = c(8, 1))
+      plot <- plot / patchwork::wrap_elements(p2) + patchwork::plot_layout(heights = c(8, 1))
     }
   }
 
@@ -262,12 +270,9 @@ plotEstimates <- function(result,
                           facet,
                           colour){
 
-  errorMessage <- checkmate::makeAssertCollection()
-  checkmate::assert_character(xscale, len = 1)
-  checkmate::assertTRUE(xscale %in% c("days", "years"))
-  #checkmate::assertTRUE(inherits(result, "SurvivalResult"))
-  checkmate::assertTRUE(all(c(x) %in% colnames(result)))
-  checkmate::reportAssertions(collection = errorMessage)
+  omopgenerics::assertCharacter(xscale, length = 1)
+  omopgenerics::assertChoice(xscale, c("days", "years"))
+  omopgenerics::assertChoice(c(x), colnames(result))
 
   plot_data <- getPlotData(estimates = result,
                            facetVars = facet,
