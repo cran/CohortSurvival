@@ -54,5 +54,5 @@ summary(cmprsk::crr(ftime = input_survival_cr$time,
             cencode = 0))
 
 ## -----------------------------------------------------------------------------
-cdm_disconnect(cdm)
+cdmDisconnect(cdm)
 

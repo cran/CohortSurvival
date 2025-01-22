@@ -63,5 +63,5 @@ plotSurvival(MGUS_death_prog %>%
 tableSurvival(MGUS_death_prog)
 
 ## -----------------------------------------------------------------------------
-cdm_disconnect(cdm)
+cdmDisconnect(cdm)
 
