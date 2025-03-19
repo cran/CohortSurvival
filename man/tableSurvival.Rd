@@ -8,7 +8,6 @@ tableSurvival(
   x,
   times = NULL,
   timeScale = "days",
-  splitStrata = TRUE,
   header = c("estimate"),
   type = "gt",
   groupColumn = NULL,
@@ -21,9 +20,6 @@ tableSurvival(
 \item{times}{Times at which to report survival in the summary table}
 
 \item{timeScale}{Time unit to report survival in: days, months or years}
-
-\item{splitStrata}{If TRUE strata will be split into columns, otherwise
-"strata_name" and "strata_level" columns will be kept.}
 
 \item{header}{A vector containing which elements should go into the header.
 Allowed are: cdm_name, group, strata, additional, variable, estimate,

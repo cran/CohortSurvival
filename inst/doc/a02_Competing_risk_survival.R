@@ -37,7 +37,7 @@ MGUS_death_prog %>%
 
 ## ----out.width = "75%"--------------------------------------------------------
 plotSurvival(MGUS_death_prog, cumulativeFailure = TRUE,
-             colour = "variable_level") + 
+             colour = "variable") + 
   theme(legend.position = "top")
 
 ## -----------------------------------------------------------------------------
@@ -55,8 +55,8 @@ MGUS_death_prog <-  estimateCompetingRiskSurvival(cdm,
 ## ----fig.height=6, fig.width=8------------------------------------------------
 plotSurvival(MGUS_death_prog %>% 
                dplyr::filter(strata_name != "Overall"), 
-             facet = "strata_level",
-             colour = "variable_level",
+             facet = "sex",
+             colour = "variable",
              cumulativeFailure = TRUE)
 
 ## -----------------------------------------------------------------------------

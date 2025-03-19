@@ -22,7 +22,8 @@ cdm$death_cohort %>%
   glimpse()
 
 ## -----------------------------------------------------------------------------
-MGUS_death <- estimateSingleEventSurvival(cdm,
+MGUS_death <- estimateSingleEventSurvival(
+  cdm,
   targetCohortTable = "mgus_diagnosis",
   outcomeCohortTable = "death_cohort"
 )
@@ -31,18 +32,68 @@ MGUS_death %>%
 class(MGUS_death)
 
 ## -----------------------------------------------------------------------------
-MGUS_death %>% 
-  asSurvivalResult() %>%
-  glimpse()
+settings(MGUS_death)
 
 ## -----------------------------------------------------------------------------
 plotSurvival(MGUS_death)
 
-## -----------------------------------------------------------------------------
-tableSurvival(MGUS_death) 
+## ----fig.width=9,fig.height=9-------------------------------------------------
+plotSurvival(MGUS_death, riskTable = TRUE)
 
 ## -----------------------------------------------------------------------------
-MGUS_death <- estimateSingleEventSurvival(cdm,
+plotSurvival(MGUS_death, ribbon = FALSE)
+plotSurvival(MGUS_death, cumulativeFailure = TRUE)
+
+## -----------------------------------------------------------------------------
+plotSurvival(MGUS_death) + theme_bw() + ggtitle("Plot survival") + coord_flip()
+
+## -----------------------------------------------------------------------------
+tableSurvival(MGUS_death)
+
+## -----------------------------------------------------------------------------
+tableSurvival(MGUS_death, times = c(30,90,180))
+
+## -----------------------------------------------------------------------------
+tableSurvival(MGUS_death, times = c(30,90,180, 500))
+
+## -----------------------------------------------------------------------------
+tableSurvival(MGUS_death, times = c(1,2), timeScale = "years")
+
+## -----------------------------------------------------------------------------
+optionsTableSurvival()
+
+## -----------------------------------------------------------------------------
+tableSurvival(MGUS_death, .options = list(title = "Survival summary",
+                                          decimalMark = ",",
+                                          bigMark = "."))
+
+## -----------------------------------------------------------------------------
+riskTable(MGUS_death)
+
+## -----------------------------------------------------------------------------
+# Transforming the output to a survival result format
+MGUS_death_survresult <- MGUS_death %>% 
+  asSurvivalResult() 
+MGUS_death_survresult %>%
+  glimpse()
+# Events, attrition and summary are now attributes of the result object
+attr(MGUS_death_survresult,"events") %>%
+  glimpse()
+attr(MGUS_death_survresult,"summary") %>%
+  glimpse()
+attr(MGUS_death_survresult,"attrition") %>%
+  glimpse()
+
+## -----------------------------------------------------------------------------
+MGUS_death_survresult %>%
+  filter(time %in% c(10:15))
+
+## ----fig.width=13,fig.height=13-----------------------------------------------
+MGUS_death_gap7 <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "death_cohort", eventGap = 7)
+plotSurvival(MGUS_death_gap7, riskTable = TRUE, riskInterval = 14)
+
+## -----------------------------------------------------------------------------
+MGUS_death_strata <- estimateSingleEventSurvival(cdm,
   targetCohortTable = "mgus_diagnosis",
   outcomeCohortTable = "death_cohort",
   strata = list(c("age_group"),
@@ -50,13 +101,53 @@ MGUS_death <- estimateSingleEventSurvival(cdm,
                 c("age_group", "sex"))
 ) 
 
+## -----------------------------------------------------------------------------
+tableSurvival(MGUS_death_strata)
+
 ## ----fig.height=6, fig.width=8------------------------------------------------
-plotSurvival(MGUS_death,
-             facet = "strata_name",
-             colour = "strata_level")
+plotSurvival(MGUS_death_strata,
+             facet = "sex",
+             colour = "age_group")
+
+## ----fig.width=17,fig.height=18-----------------------------------------------
+plotSurvival(MGUS_death_strata,
+             colour = c("age_group", "sex"),
+             riskTable = TRUE)
+
+## ----fig.width=17,fig.height=18-----------------------------------------------
+plotSurvival(MGUS_death_strata, facet = c("age_group", "sex"))
+
+## ----fig.width=17,fig.height=18-----------------------------------------------
+plotSurvival(MGUS_death_strata) +
+  facet_grid(rows = vars(sex), cols = vars(age_group))
+  
 
 ## -----------------------------------------------------------------------------
-tableSurvival(MGUS_death)
+MM_death <- estimateSingleEventSurvival(cdm, "progression", "death_cohort")
+MGUS_MM_death <- bind(MGUS_death, MM_death)
+
+## -----------------------------------------------------------------------------
+settings(MGUS_MM_death)
+tableSurvival(MGUS_MM_death)
+plotSurvival(MGUS_MM_death, colour = "target_cohort")
+
+## -----------------------------------------------------------------------------
+cdm <- bind(cdm$progression, cdm$death_cohort, name = "outcome_cohorts")
+
+## -----------------------------------------------------------------------------
+MGUS_death_prog <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "outcome_cohorts")
+tableSurvival(MGUS_death_prog)
+plotSurvival(MGUS_death_prog, colour = "outcome")
+
+## -----------------------------------------------------------------------------
+x <- tempdir()
+exportSummarisedResult(MGUS_death, path = x, fileName = "result.csv")
+
+## -----------------------------------------------------------------------------
+MGUS_death_imported <- importSummarisedResult(path = file.path(x, "result.csv"))
+
+## ----fig.width=9,fig.height=9-------------------------------------------------
+plotSurvival(MGUS_death_imported, riskTable = TRUE)
 
 ## -----------------------------------------------------------------------------
 cdmDisconnect(cdm)
