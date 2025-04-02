@@ -592,7 +592,7 @@ estimateCompetingRiskSurvival <- function(cdm,
         group_name = "target_cohort",
         group_level = .data$target_cohort,
         variable_level = .data$outcome,
-        analysis_type = "single_event",
+        analysis_type = "competing_risk",
         estimate_name = "count"
       ) %>%
       tidyr::pivot_longer(
@@ -974,6 +974,14 @@ estimateSurvival <- function(cdm,
         dplyr::mutate(analysis_type = "competing_risk")
     }
 
+    if(is.null(competingOutcomeCohortTable)) {
+      summary <- summary %>%
+        dplyr::mutate(
+          restricted_mean_survival_95CI_upper = .data$restricted_mean_survival + stats::qnorm(0.975) * .data$restricted_mean_survival_se,
+          restricted_mean_survival_95CI_lower = .data$restricted_mean_survival - stats::qnorm(0.975) * .data$restricted_mean_survival_se
+        ) %>%
+        dplyr::select(-"restricted_mean_survival_se")
+    }
     summary <- summary %>%
       dplyr::filter(.data$outcome != "none") %>%
       dplyr::mutate(

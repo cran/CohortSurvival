@@ -102,6 +102,23 @@ Because the output of the function `plotSurvival` is a ggplot, the user can also
 plotSurvival(MGUS_death) + theme_bw() + ggtitle("Plot survival") + coord_flip()
 ```
 
+If we want to display the time information in another unit (like years or months), we will have to make the changes manually to the survival estimates first. To have the x axis in years, we would to the following:
+
+```{r}
+MGUS_death_years <- MGUS_death %>%
+  dplyr::mutate(
+    additional_level = dplyr::if_else(
+      result_id == 1, as.character(
+      as.numeric(additional_level)/365.25
+    ), additional_level
+  )
+)
+
+plotSurvival(MGUS_death_years) + ggplot2::xlab("Time in years")
+```
+
+We could clearly do the same for any other time scaling. For months, we would typically divide the estimates by 30.4375.
+
 Apart from the survival estimates retrieved, our main output also contains information on the survival events, summary and attrition. There are different functions in the package which we can use to present that information in a tidy way.
 
 The function `tableSurvival()` provides a survival summary. This includes the number of records (people in the target cohort), the number of events (people who experience the outcome event in the target cohort), and the median survival and restricted mean survival if available. This is provided for all combinations of target and outcome cohorts and stratifications available in the result.

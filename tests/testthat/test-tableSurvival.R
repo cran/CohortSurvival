@@ -18,7 +18,7 @@ test_that("survival summary", {
          '[header_name]Estimate name\n[header_level]Number records',
          '[header_name]Estimate name\n[header_level]Number events',
          '[header_name]Estimate name\n[header_level]Median survival (95% CI)',
-         '[header_name]Estimate name\n[header_level]Restricted mean survival (SE)',
+         '[header_name]Estimate name\n[header_level]Restricted mean survival (95% CI)',
          '[header_name]Estimate name\n[header_level]100 days survival estimate',
          '[header_name]Estimate name\n[header_level]200 days survival estimate')))
 
@@ -66,7 +66,7 @@ test_that("survival summary", {
          '[header_name]Estimate name\n[header_level]Number records',
          '[header_name]Estimate name\n[header_level]Number events',
          '[header_name]Estimate name\n[header_level]Median survival (95% CI)',
-         '[header_name]Estimate name\n[header_level]Restricted mean survival (SE)')))
+         '[header_name]Estimate name\n[header_level]Restricted mean survival (95% CI)')))
 
   gt3 <- tableSurvival(survsex, header = c("cdm_name", "group"))
    expect_true(all(
@@ -103,4 +103,29 @@ test_that("expected errors", {
 
   CDMConnector::cdmDisconnect(cdm)
 
+})
+
+test_that("timeScale months", {
+  cdm <- mockMGUS2cdm()
+  surv <- estimateCompetingRiskSurvival(cdm, "mgus_diagnosis", "progression",
+                                        "death_cohort", strata = list("sex"))
+
+  tabdays <- tableSurvival(surv, times = c(30,183,365,730), type = "tibble")
+  tabmonths <- tableSurvival(surv, times = c(1,6,12,24), timeScale = "months", type = "tibble")
+  tabyears <- tableSurvival(surv, times = c(0.5,1,2), timeScale = "years", type = "tibble")
+
+  expect_true(all(tabdays %>% dplyr::pull("[header_name]Estimate name\n[header_level]30 days survival estimate") ==
+                  tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]1 months survival estimate")))
+  expect_true(all(tabdays %>% dplyr::pull("[header_name]Estimate name\n[header_level]183 days survival estimate") ==
+                    tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]6 months survival estimate")))
+  expect_true(all(tabdays %>% dplyr::pull("[header_name]Estimate name\n[header_level]365 days survival estimate") ==
+                    tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]12 months survival estimate")))
+  expect_true(all(tabyears %>% dplyr::pull("[header_name]Estimate name\n[header_level]0.5 years survival estimate") ==
+                    tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]6 months survival estimate")))
+  expect_true(all(tabyears %>% dplyr::pull("[header_name]Estimate name\n[header_level]1 years survival estimate") ==
+                    tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]12 months survival estimate")))
+  expect_true(all(tabdays %>% dplyr::pull("[header_name]Estimate name\n[header_level]Restricted mean survival") %>% as.numeric() ==
+                    round(tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]Restricted mean survival") %>% as.numeric() * 30.4375, digits = 0)))
+
+  CDMConnector::cdmDisconnect(cdm)
 })

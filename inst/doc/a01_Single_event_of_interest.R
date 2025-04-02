@@ -48,6 +48,18 @@ plotSurvival(MGUS_death, cumulativeFailure = TRUE)
 plotSurvival(MGUS_death) + theme_bw() + ggtitle("Plot survival") + coord_flip()
 
 ## -----------------------------------------------------------------------------
+MGUS_death_years <- MGUS_death %>%
+  dplyr::mutate(
+    additional_level = dplyr::if_else(
+      result_id == 1, as.character(
+      as.numeric(additional_level)/365.25
+    ), additional_level
+  )
+)
+
+plotSurvival(MGUS_death_years) + ggplot2::xlab("Time in years")
+
+## -----------------------------------------------------------------------------
 tableSurvival(MGUS_death)
 
 ## -----------------------------------------------------------------------------
