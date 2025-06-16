@@ -48,16 +48,8 @@ plotSurvival(MGUS_death, cumulativeFailure = TRUE)
 plotSurvival(MGUS_death) + theme_bw() + ggtitle("Plot survival") + coord_flip()
 
 ## -----------------------------------------------------------------------------
-MGUS_death_years <- MGUS_death %>%
-  dplyr::mutate(
-    additional_level = dplyr::if_else(
-      result_id == 1, as.character(
-      as.numeric(additional_level)/365.25
-    ), additional_level
-  )
-)
-
-plotSurvival(MGUS_death_years) + ggplot2::xlab("Time in years")
+plotSurvival(MGUS_death, timeScale = "years")
+plotSurvival(MGUS_death, timeScale = "months")
 
 ## -----------------------------------------------------------------------------
 tableSurvival(MGUS_death)
@@ -105,6 +97,28 @@ MGUS_death_gap7 <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "death_coh
 plotSurvival(MGUS_death_gap7, riskTable = TRUE, riskInterval = 14)
 
 ## -----------------------------------------------------------------------------
+MGUS_death_fu <- estimateSingleEventSurvival(
+  cdm,
+  targetCohortTable = "mgus_diagnosis",
+  outcomeCohortTable = "death_cohort",
+  followUpDays = 100
+)
+
+MGUS_death_all <- omopgenerics::bind(
+  MGUS_death,
+  MGUS_death_fu
+)
+
+MGUS_death_all %>%
+  asSurvivalResult() %>%
+  glimpse()
+
+## -----------------------------------------------------------------------------
+plotSurvival(MGUS_death_all, facet = "follow_up_days")
+
+tableSurvival(MGUS_death_all)
+
+## -----------------------------------------------------------------------------
 MGUS_death_strata <- estimateSingleEventSurvival(cdm,
   targetCohortTable = "mgus_diagnosis",
   outcomeCohortTable = "death_cohort",
@@ -150,6 +164,9 @@ cdm <- bind(cdm$progression, cdm$death_cohort, name = "outcome_cohorts")
 MGUS_death_prog <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "outcome_cohorts")
 tableSurvival(MGUS_death_prog)
 plotSurvival(MGUS_death_prog, colour = "outcome")
+
+## -----------------------------------------------------------------------------
+plotSurvival(MGUS_death_prog, colour = "outcome", logLog = TRUE)
 
 ## -----------------------------------------------------------------------------
 x <- tempdir()

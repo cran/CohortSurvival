@@ -13,7 +13,7 @@ test_that("omopgenerics reexports work", {
                                           "death_cohort")
 
   # importing and exporting
-  result_path <- tempdir("result")
+  result_path <- tempdir()
   expect_warning(omopgenerics::exportSummarisedResult(surv, path = result_path))
   surv_imported <-  omopgenerics::importSummarisedResult(result_path)
   expect_no_error(tableSurvival(surv_imported, type = "tibble"))
@@ -67,6 +67,13 @@ test_that("omopgenerics filterSettings", {
                     omopgenerics::filterSettings(analysis_type == "single_event") %>%
                     dplyr::select(result_id) %>% dplyr::arrange(result_id) %>%
                     dplyr::distinct() == c(1,2,3,4)))
+
+  expect_warning(study_result %>%
+                    omopgenerics::tidy())
+
+  expect_no_error(study_result %>%
+                    omopgenerics::filterSettings(result_type == "survival_events") %>%
+                    omopgenerics::tidy())
 
   CDMConnector::cdmDisconnect(cdmSurvival)
 })

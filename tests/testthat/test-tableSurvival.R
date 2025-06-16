@@ -102,7 +102,6 @@ test_that("expected errors", {
   expect_error(tableSurvival(surv, times = c(1,2,3), timeScale = "day"))
 
   CDMConnector::cdmDisconnect(cdm)
-
 })
 
 test_that("timeScale months", {
@@ -127,5 +126,14 @@ test_that("timeScale months", {
   expect_true(all(tabdays %>% dplyr::pull("[header_name]Estimate name\n[header_level]Restricted mean survival") %>% as.numeric() ==
                     round(tabmonths %>% dplyr::pull("[header_name]Estimate name\n[header_level]Restricted mean survival") %>% as.numeric() * 30.4375, digits = 0)))
 
+  CDMConnector::cdmDisconnect(cdm)
+})
+
+test_that("timeScale and times incompatible", {
+  cdm <- mockMGUS2cdm()
+  surv <- estimateSingleEventSurvival(cdm,
+                                      targetCohortTable = "mgus_diagnosis",
+                                      outcomeCohortTable = "death_cohort")
+  expect_no_error(tableSurvival(surv, times = c(50), timeScale = "years"))
   CDMConnector::cdmDisconnect(cdm)
 })

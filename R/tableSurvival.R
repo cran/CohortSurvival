@@ -221,8 +221,10 @@ tableSurvival <- function(x,
     )
 
   if (!is.null(times)) {
-    summary_table <- summary_table %>%
-      dplyr::bind_rows(summary_times %>% dplyr::select(!c("name","time")))
+    if(summary_times %>% dplyr::tally() %>% dplyr::pull() != 0) {
+      summary_table <- summary_table %>%
+        dplyr::bind_rows(summary_times %>% dplyr::select(!c("name","time")))
+    }
   }
 
   excludeCols <- c("result_id", "estimate_type")
