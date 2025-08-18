@@ -20,9 +20,10 @@
 #' @param cdm CDM reference
 #' @param targetCohortTable targetCohortTable
 #' @param outcomeCohortTable The outcome cohort table of interest.
-#' @param targetCohortId targetCohortId
-#' @param outcomeCohortId ID of event cohorts to include. Only one outcome
-#' (and so one ID) can be considered.
+#' @param targetCohortId Target cohorts to include. It can either be a
+#' cohort_definition_id value or a cohort_name. Multiple ids are allowed.
+#' @param outcomeCohortId Outcome cohorts to include. It can either be a
+#' cohort_definition_id value or a cohort_name. Multiple ids are allowed.
 #' @param outcomeDateVariable  Variable containing date of outcome event
 #' @param outcomeWashout Washout time in days for the outcome
 #' @param censorOnCohortExit If TRUE, an individual's follow up will be
@@ -85,15 +86,13 @@ estimateSingleEventSurvival <- function(cdm,
     outcomeCohortId <- getCohortId(outcomeCohortTable, cdm)
   }
 
-  # Make sure attrition is up to date for our outcome cohort
-  cdm[[outcomeCohortTable]] <- cdm[[outcomeCohortTable]] %>%
-    omopgenerics::recordCohortAttrition("Update attrition")
-
   emptyOutcomes <- omopgenerics::settings(cdm[[outcomeCohortTable]]) %>%
     dplyr::left_join(
-      omopgenerics::cohortCount(cdm[[outcomeCohortTable]]),
-      by = "cohort_definition_id") %>%
-    dplyr::filter(.data$number_records == 0)
+      cdm[[outcomeCohortTable]] %>%
+        dplyr::group_by(.data$cohort_definition_id) %>%
+        dplyr::tally(name = "number_records"),
+      by = "cohort_definition_id", copy = TRUE) %>%
+    dplyr::filter(.data$number_records == 0 | is.na(.data$number_records))
   if(nrow(emptyOutcomes) > 0){
     emptyOutcomenames <- emptyOutcomes %>% dplyr::pull("cohort_name")
     cli::cli_warn("Outcome cohort{?s} {emptyOutcomenames} {?is/are} empty")
@@ -101,15 +100,24 @@ estimateSingleEventSurvival <- function(cdm,
 
   emptyTargets <- omopgenerics::settings(cdm[[targetCohortTable]]) %>%
     dplyr::left_join(
-      omopgenerics::cohortCount(cdm[[targetCohortTable]]),
-      by = "cohort_definition_id") %>%
-    dplyr::filter(.data$number_records == 0)
+      cdm[[targetCohortTable]] %>%
+        dplyr::group_by(.data$cohort_definition_id) %>%
+        dplyr::tally(name = "number_records"),
+      by = "cohort_definition_id", copy = TRUE) %>%
+    dplyr::filter(.data$number_records == 0 | is.na(.data$number_records))
   if(nrow(emptyTargets) > 0){
     emptyTargetnames <- emptyTargets %>% dplyr::pull("cohort_name")
     cli::cli_warn("Target cohort{?s} {emptyTargetnames} {?is/are} empty")
   }
 
-  outcomeCohortId <- outcomeCohortId[!(outcomeCohortId %in% (emptyOutcomes %>% dplyr::pull("cohort_definition_id")))]
+  targetCohortId <- targetCohortId[!(targetCohortId %in% emptyTargets)]
+
+  if(length(outcomeCohortId > 0)) {
+    outcomeCohortId <- omopgenerics::validateCohortIdArgument(outcomeCohortId, cdm[[outcomeCohortTable]])
+  }
+  if(length(targetCohortId > 0)) {
+    targetCohortId <- omopgenerics::validateCohortIdArgument(targetCohortId, cdm[[targetCohortTable]])
+  }
 
   # Apply the survival estimation over all combinations of target and outcome cohorts
   results <- expand.grid(target_idx = seq_along(targetCohortId), outcome_idx = seq_along(outcomeCohortId)) %>%
@@ -375,16 +383,17 @@ estimateSingleEventSurvival <- function(cdm,
 #' cohorts in the OMOP Common Data Model
 #'
 #' @param cdm CDM reference
-#' @param targetCohortTable targetCohortTable
+#' @param targetCohortTable The target cohort table of interest.
 #' @param outcomeCohortTable The outcome cohort table of interest.
 #' @param competingOutcomeCohortTable The competing outcome cohort table of interest.
-#' @param targetCohortId targetCohortId
-#' @param outcomeCohortId ID of event cohorts to include. Only one outcome
-#' (and so one ID) can be considered.
+#' @param targetCohortId Target cohorts to include. It can either be a
+#' cohort_definition_id value or a cohort_name. Multiple ids are allowed.
+#' @param outcomeCohortId Outcome cohorts to include. It can either be a
+#' cohort_definition_id value or a cohort_name. Multiple ids are allowed.
 #' @param outcomeDateVariable  Variable containing date of outcome event
 #' @param outcomeWashout Washout time in days for the outcome
-#' @param competingOutcomeCohortId ID of event cohorts to include. Only one competing outcome
-#' (and so one ID) can be considered.
+#' @param competingOutcomeCohortId Competing outcome cohorts to include. It can either be a
+#' cohort_definition_id value or a cohort_name. Multiple ids are allowed.
 #' @param competingOutcomeDateVariable Variable containing date of competing outcome event
 #' @param competingOutcomeWashout Washout time in days for the competing outcome
 #' @param censorOnCohortExit If TRUE, an individual's follow up will be
@@ -456,27 +465,26 @@ estimateCompetingRiskSurvival <- function(cdm,
     competingOutcomeCohortId <- getCohortId(competingOutcomeCohortTable, cdm)
   }
 
-  # Make sure attrition is up to date for our outcome cohorts
-  cdm[[outcomeCohortTable]] <- cdm[[outcomeCohortTable]] %>%
-    omopgenerics::recordCohortAttrition("update attrition")
-  cdm[[competingOutcomeCohortTable]] <- cdm[[competingOutcomeCohortTable]] %>%
-    omopgenerics::recordCohortAttrition("update attrition")
-
   # Handle empty cohorts
   emptyOutcomes <- omopgenerics::settings(cdm[[outcomeCohortTable]]) %>%
     dplyr::left_join(
-      omopgenerics::cohortCount(cdm[[outcomeCohortTable]]),
-      by = "cohort_definition_id") %>%
-    dplyr::filter(.data$number_records == 0)
-  emptyCompetingOutcomes <- omopgenerics::settings(cdm[[competingOutcomeCohortTable]]) %>%
-    dplyr::left_join(
-      omopgenerics::cohortCount(cdm[[competingOutcomeCohortTable]]),
-      by = "cohort_definition_id") %>%
-    dplyr::filter(.data$number_records == 0)
+      cdm[[outcomeCohortTable]] %>%
+        dplyr::group_by(.data$cohort_definition_id) %>%
+        dplyr::tally(name = "number_records"),
+      by = "cohort_definition_id", copy = TRUE) %>%
+    dplyr::filter(.data$number_records == 0 | is.na(.data$number_records))
   if(nrow(emptyOutcomes) > 0){
     emptyOutcomenames <- emptyOutcomes %>% dplyr::pull("cohort_name")
     cli::cli_warn("Outcome cohort{?s} {emptyOutcomenames} {?is/are} empty")
   }
+
+  emptyCompetingOutcomes <- omopgenerics::settings(cdm[[competingOutcomeCohortTable]]) %>%
+    dplyr::left_join(
+      cdm[[competingOutcomeCohortTable]] %>%
+        dplyr::group_by(.data$cohort_definition_id) %>%
+        dplyr::tally(name = "number_records"),
+      by = "cohort_definition_id", copy = TRUE) %>%
+    dplyr::filter(.data$number_records == 0 | is.na(.data$number_records))
   if(nrow(emptyCompetingOutcomes) > 0){
     emptyCompetingOutcomenames <- emptyCompetingOutcomes %>% dplyr::pull("cohort_name")
     cli::cli_warn("Competing outcome cohort{?s} {emptyCompetingOutcomenames} {?is/are} empty")
@@ -484,16 +492,27 @@ estimateCompetingRiskSurvival <- function(cdm,
 
   emptyTargets <- omopgenerics::settings(cdm[[targetCohortTable]]) %>%
     dplyr::left_join(
-      omopgenerics::cohortCount(cdm[[targetCohortTable]]),
-      by = "cohort_definition_id") %>%
-    dplyr::filter(.data$number_records == 0)
+      cdm[[targetCohortTable]] %>%
+        dplyr::group_by(.data$cohort_definition_id) %>%
+        dplyr::tally(name = "number_records"),
+      by = "cohort_definition_id", copy = TRUE) %>%
+    dplyr::filter(.data$number_records == 0 | is.na(.data$number_records))
   if(nrow(emptyTargets) > 0){
     emptyTargetnames <- emptyTargets %>% dplyr::pull("cohort_name")
     cli::cli_warn("Target cohort{?s} {emptyTargetnames} {?is/are} empty")
   }
 
-  outcomeCohortId <- outcomeCohortId[!(outcomeCohortId %in% (emptyOutcomes %>% dplyr::pull("cohort_definition_id")))]
-  competingOutcomeCohortId <- competingOutcomeCohortId[!(competingOutcomeCohortId %in% (emptyCompetingOutcomes %>% dplyr::pull("cohort_definition_id")))]
+  targetCohortId <- targetCohortId[!(targetCohortId %in% emptyTargets)]
+
+  if(length(outcomeCohortId > 0)) {
+    outcomeCohortId <- omopgenerics::validateCohortIdArgument(outcomeCohortId, cdm[[outcomeCohortTable]])
+  }
+  if(length(targetCohortId > 0)) {
+    targetCohortId <- omopgenerics::validateCohortIdArgument(targetCohortId, cdm[[targetCohortTable]])
+  }
+  if(length(competingOutcomeCohortId > 0)) {
+    competingOutcomeCohortId <- omopgenerics::validateCohortIdArgument(competingOutcomeCohortId, cdm[[competingOutcomeCohortTable]])
+  }
 
   # Apply survival to all combinations of ids
   results <- expand.grid(target_idx = seq_along(targetCohortId), outcome_idx = seq_along(outcomeCohortId),
@@ -789,13 +808,26 @@ estimateSurvival <- function(cdm,
                              minimumSurvivalDays = 1) {
 
   # check inputs
-  validateInputSurvival(cdm, targetCohortTable, targetCohortId, outcomeCohortTable,
-                        outcomeCohortId, outcomeDateVariable, outcomeWashout,
-                        competingOutcomeCohortTable, competingOutcomeCohortId,
-                        competingOutcomeDateVariable, competingOutcomeWashout,
-                        censorOnCohortExit, censorOnDate, followUpDays,
-                        strata, eventGap, estimateGap, restrictedMeanFollowUp,
-                        minimumSurvivalDays)
+  omopgenerics::assertCharacter(targetCohortTable, length = 1)
+  omopgenerics::assertCharacter(outcomeCohortTable, length = 1)
+  omopgenerics::assertCharacter(competingOutcomeCohortTable, length = 1, null = TRUE)
+  omopgenerics::validateCdmArgument(cdm)
+  omopgenerics::validateCohortArgument(cdm[[targetCohortTable]])
+  omopgenerics::validateCohortArgument(cdm[[outcomeCohortTable]])
+  omopgenerics::assertNumeric(targetCohortId, integerish = TRUE, length = 1, min = 1)
+  omopgenerics::assertList(strata, null = TRUE)
+  omopgenerics::assertChoice(unlist(strata), choices = colnames(cdm[[targetCohortTable]]), null = TRUE)
+  omopgenerics::assertCharacter(outcomeDateVariable, length = 1)
+  omopgenerics::assertCharacter(competingOutcomeDateVariable, length = 1)
+  omopgenerics::assertLogical(censorOnCohortExit, length = 1)
+  omopgenerics::assertDate(censorOnDate, null = TRUE)
+  omopgenerics::assertNumeric(followUpDays, length = 1, min = 1, integerish = TRUE)
+  omopgenerics::assertNumeric(outcomeWashout, length = 1, min = 0, integerish = TRUE)
+  omopgenerics::assertNumeric(competingOutcomeWashout, length = 1, min = 0, integerish = TRUE)
+  omopgenerics::assertNumeric(eventGap, integerish = TRUE, min = 1)
+  omopgenerics::assertNumeric(estimateGap, integerish = TRUE, min = 1)
+  omopgenerics::assertNumeric(restrictedMeanFollowUp, integerish = TRUE, min = 1, length = 1, null = TRUE)
+  omopgenerics::assertNumeric(minimumSurvivalDays, integerish = TRUE, min = 0, length = 1)
 
 # extract and prepare exposure data
   workingExposureTable <- cdm[[targetCohortTable]] %>%
@@ -803,7 +835,8 @@ estimateSurvival <- function(cdm,
     addCohortSurvival(cdm, outcomeCohortTable, outcomeCohortId, outcomeDateVariable,
       outcomeWashout, censorOnCohortExit, censorOnDate, followUpDays) %>%
     dplyr::rename( "outcome_time" = "time", "outcome_status" = "status") %>%
-    dplyr::compute(temporary = FALSE)
+    dplyr::compute(temporary = FALSE,
+                   logPrefix = "CohortSurvival_estimateSurvival_exposure")
 
   # handle competing risks
   if (!is.null(competingOutcomeCohortTable)) {
@@ -812,14 +845,16 @@ estimateSurvival <- function(cdm,
         competingOutcomeDateVariable, competingOutcomeWashout, censorOnCohortExit,
         censorOnDate, followUpDays) %>%
       dplyr::rename("competing_risk_time" = "time", "competing_risk_status" = "status") %>%
-      dplyr::compute(temporary = FALSE)
+      dplyr::compute(temporary = FALSE,
+                     logPrefix = "CohortSurvival_estimateSurvival_add_competing_risk")
   }
 
   # collect
   workingExposureTable <- workingExposureTable %>%
     dplyr::filter(!is.na(.data$outcome_time) &&
                     !is.na(.data$outcome_status)) %>%
-    dplyr::compute(temporary = FALSE) %>%
+    dplyr::compute(temporary = FALSE,
+                   logPrefix = "CohortSurvival_estimateSurvival_remove_na") %>%
     omopgenerics::recordCohortAttrition(reason = "No outcome event in washout period")
 
   workingExposureTable <- workingExposureTable %>%
@@ -1341,19 +1376,6 @@ competingRiskSurvival <- function(survData, times, variables, eventGap,
   )
   summ <- summary(fit, times = times, extend = TRUE, data.frame = TRUE)
 
-  if(summ %>% dplyr::select("state") %>% dplyr::distinct() %>% dplyr::pull() %>% length() < 3){
-    cli::cli_h1("No results for competing risk analysis")
-    cli::cli_text(c(
-      "Competing risk variable must have three levels.",
-      "Do you have at least 1 individual for:"
-    ))
-    cli::cli_li("1) censored without event,")
-    cli::cli_li("2) censored at outcome event of intest, and")
-    cli::cli_li("3) censored at outcome competing event?")
-
-    return(empty_estimates())
-  }
-
   fitSummary[[1]] <- as.data.frame(summary(fit, rmean = restrictedMeanFollowUp)$table) %>%
     dplyr::rename(
       "number_records" = "n",
@@ -1616,51 +1638,6 @@ addCohortDetails <- function(x,
 
 empty_estimates <- function() {
   dplyr::tibble()
-}
-
-validateInputSurvival <- function(cdm,
-                                  targetCohortTable,
-                                  targetCohortId,
-                                  outcomeCohortTable,
-                                  outcomeCohortId,
-                                  outcomeDateVariable,
-                                  outcomeWashout,
-                                  competingOutcomeCohortTable,
-                                  competingOutcomeCohortId,
-                                  competingOutcomeDateVariable,
-                                  competingOutcomeWashout,
-                                  censorOnCohortExit,
-                                  censorOnDate,
-                                  followUpDays,
-                                  strata,
-                                  eventGap,
-                                  estimateGap,
-                                  restrictedMeanFollowUp,
-                                  minimumSurvivalDays) {
-
-  omopgenerics::assertCharacter(targetCohortTable, length = 1)
-  omopgenerics::assertCharacter(outcomeCohortTable, length = 1)
-  omopgenerics::assertCharacter(competingOutcomeCohortTable, length = 1, null = TRUE)
-  omopgenerics::validateCdmArgument(cdm)
-  omopgenerics::validateCohortArgument(cdm[[targetCohortTable]])
-  omopgenerics::validateCohortArgument(cdm[[outcomeCohortTable]])
-  omopgenerics::assertNumeric(targetCohortId, integerish = TRUE, length = 1, min = 1)
-  omopgenerics::assertList(strata, null = TRUE)
-  omopgenerics::assertChoice(unlist(strata), choices = colnames(cdm[[targetCohortTable]]), null = TRUE)
-  omopgenerics::assertNumeric(outcomeCohortId, length = 1, min = 1)
-  omopgenerics::assertNumeric(competingOutcomeCohortId, length = 1, min = 1)
-  omopgenerics::assertCharacter(outcomeDateVariable, length = 1)
-  omopgenerics::assertCharacter(competingOutcomeDateVariable, length = 1)
-  omopgenerics::assertLogical(censorOnCohortExit, length = 1)
-  omopgenerics::assertDate(censorOnDate, null = TRUE)
-  omopgenerics::assertNumeric(followUpDays, length = 1, min = 1, integerish = TRUE)
-  omopgenerics::assertNumeric(outcomeWashout, length = 1, min = 0, integerish = TRUE)
-  omopgenerics::assertNumeric(competingOutcomeWashout, length = 1, min = 0, integerish = TRUE)
-  omopgenerics::assertNumeric(eventGap, integerish = TRUE, min = 1)
-  omopgenerics::assertNumeric(estimateGap, integerish = TRUE, min = 1)
-  omopgenerics::assertNumeric(restrictedMeanFollowUp, integerish = TRUE, min = 1, length = 1, null = TRUE)
-  omopgenerics::assertNumeric(minimumSurvivalDays, integerish = TRUE, min = 0, length = 1)
-
 }
 
 # Helper function to get cohort id

@@ -1,3 +1,11 @@
+# CohortSurvival 1.0.3
+
+* Fix bug on character days_to_event #348
+* Add logPrefix in compute() #347
+* Report survival output for empty target and outcome tables #346
+* Add availableSurvivalGrouping() function for clarity on plot variables #344
+* Allow cohortId inputs to be cohort names #343
+
 
 # CohortSurvival 1.0.2
 

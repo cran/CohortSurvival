@@ -14,17 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-checkCohortId <- function(cohort, cohortId) {
-  errorMessage <- checkmate::makeAssertCollection()
-  checkmate::assertIntegerish(cohortId,
-    add = errorMessage
-  )
-  checkmate::reportAssertions(collection = errorMessage)
-
-  nrow(omopgenerics::settings(cohort) %>%
-    dplyr::filter(.data$cohort_definition_id %in% .env$cohortId)) == length(cohortId)
-}
-
 checkExposureCohortId <- function(cohort) {
   isCohortIdUnique <- length(cohort %>%
                           dplyr::select("cohort_definition_id") %>%

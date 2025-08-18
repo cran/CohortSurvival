@@ -249,15 +249,15 @@ test_that("multiple exposures, multiple outcomes: single event", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -267,18 +267,10 @@ test_that("multiple exposures, multiple outcomes: single event", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # one target, one outcome
-  expect_no_error(surv <- estimateSingleEventSurvival(cdm2,
+  expect_no_error(surv <- estimateSingleEventSurvival(cdm,
                                                       targetCohortTable = "exposure_cohort",
                                                       targetCohortId = 1,
                                                       outcomeCohortTable = "cohort1",
@@ -294,7 +286,7 @@ test_that("multiple exposures, multiple outcomes: single event", {
                  dplyr::pull("cohort_name"))
 
   # two target, one outcome
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       targetCohortId = c(1,2),
                                       outcomeCohortTable = "cohort1",
@@ -310,7 +302,7 @@ test_that("multiple exposures, multiple outcomes: single event", {
                  dplyr::pull("cohort_name"))
 
   # two target, two outcome
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       targetCohortId = c(1,2),
                                       outcomeCohortTable = "cohort1",
@@ -344,7 +336,7 @@ test_that("multiple exposures, multiple outcomes: single event", {
                  dplyr::pull("cohort_name"))
 
   # two target, two outcome - without specifying
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1"
   ) %>% asSurvivalResult()
@@ -357,7 +349,7 @@ test_that("multiple exposures, multiple outcomes: single event", {
                  dplyr::filter(cohort_definition_id %in%  c(2,3)) %>%
                  dplyr::pull("cohort_name"))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
 })
 
@@ -437,15 +429,15 @@ test_that("multiple exposures, multiple outcomes: competing risk", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -456,19 +448,10 @@ test_that("multiple exposures, multiple outcomes: competing risk", {
       cohort2 = competing_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # one target, one outcome
-  expect_no_error(surv <- estimateCompetingRiskSurvival(cdm2,
+  expect_no_error(surv <- estimateCompetingRiskSurvival(cdm,
                                                         targetCohortTable = "exposure_cohort",
                                                         targetCohortId = 1,
                                                         outcomeCohortTable = "cohort1",
@@ -477,19 +460,19 @@ test_that("multiple exposures, multiple outcomes: competing risk", {
                                                         competingOutcomeCohortId = 4
   ) %>% asSurvivalResult())
   expect_equal(unique(surv$target_cohort),
-               omopgenerics::settings(cdm2$exposure_cohort) %>%
+               omopgenerics::settings(cdm$exposure_cohort) %>%
                  dplyr::filter(cohort_definition_id == 1) %>%
                  dplyr::pull("cohort_name"))
   expect_equal(sort(unique(surv$variable)),
-               sort(c(omopgenerics::settings(cdm2$cohort1) %>%
+               sort(c(omopgenerics::settings(cdm$cohort1) %>%
                         dplyr::filter(cohort_definition_id == 2) %>%
                         dplyr::pull("cohort_name"),
-                      omopgenerics::settings(cdm2$cohort2) %>%
+                      omopgenerics::settings(cdm$cohort2) %>%
                         dplyr::filter(cohort_definition_id == 4) %>%
                         dplyr::pull("cohort_name"))))
 
   # two target, one outcome, one competing risk
-  expect_no_error(surv <- estimateCompetingRiskSurvival(cdm2,
+  expect_no_error(surv <- estimateCompetingRiskSurvival(cdm,
                                                         targetCohortTable = "exposure_cohort",
                                                         targetCohortId = c(1,2),
                                                         outcomeCohortTable = "cohort1",
@@ -498,19 +481,19 @@ test_that("multiple exposures, multiple outcomes: competing risk", {
                                                         competingOutcomeCohortId = 4
   ) %>% asSurvivalResult())
   expect_equal(sort(unique(surv$target_cohort)),
-               sort(omopgenerics::settings(cdm2$exposure_cohort) %>%
+               sort(omopgenerics::settings(cdm$exposure_cohort) %>%
                       dplyr::filter(cohort_definition_id %in%  c(1,2)) %>%
                       dplyr::pull("cohort_name")))
   expect_equal(sort(unique(surv$variable)),
-               sort(c(omopgenerics::settings(cdm2$cohort1) %>%
+               sort(c(omopgenerics::settings(cdm$cohort1) %>%
                         dplyr::filter(cohort_definition_id == 2) %>%
                         dplyr::pull("cohort_name"),
-                      omopgenerics::settings(cdm2$cohort2) %>%
+                      omopgenerics::settings(cdm$cohort2) %>%
                         dplyr::filter(cohort_definition_id == 4) %>%
                         dplyr::pull("cohort_name"))))
 
   # two target, two outcome, one competing risk
-  surv <- estimateCompetingRiskSurvival(cdm2,
+  surv <- estimateCompetingRiskSurvival(cdm,
                                         targetCohortTable = "exposure_cohort",
                                         targetCohortId = c(1,2),
                                         outcomeCohortTable = "cohort1",
@@ -519,19 +502,19 @@ test_that("multiple exposures, multiple outcomes: competing risk", {
                                         competingOutcomeCohortId = 4
   ) %>% asSurvivalResult()
   expect_equal(sort(unique(surv$target_cohort)),
-               sort(omopgenerics::settings(cdm2$exposure_cohort) %>%
+               sort(omopgenerics::settings(cdm$exposure_cohort) %>%
                       dplyr::filter(cohort_definition_id %in%  c(1,2)) %>%
                       dplyr::pull("cohort_name")))
   expect_equal(sort(unique(surv$variable)),
-               sort(c(omopgenerics::settings(cdm2$cohort1) %>%
+               sort(c(omopgenerics::settings(cdm$cohort1) %>%
                         dplyr::filter(cohort_definition_id %in%  c(2,3)) %>%
                         dplyr::pull("cohort_name"),
-                      omopgenerics::settings(cdm2$cohort2) %>%
+                      omopgenerics::settings(cdm$cohort2) %>%
                         dplyr::filter(cohort_definition_id == 4) %>%
                         dplyr::pull("cohort_name"))))
 
   # two target, two outcome, two competing risk
-  surv <- estimateCompetingRiskSurvival(cdm2,
+  surv <- estimateCompetingRiskSurvival(cdm,
                                         targetCohortTable = "exposure_cohort",
                                         targetCohortId = c(1,2),
                                         outcomeCohortTable = "cohort1",
@@ -542,36 +525,36 @@ test_that("multiple exposures, multiple outcomes: competing risk", {
     omopgenerics::suppress(minCellCount = 1) %>%
     asSurvivalResult()
   expect_equal(sort(unique(surv$target_cohort)),
-               sort(omopgenerics::settings(cdm2$exposure_cohort) %>%
+               sort(omopgenerics::settings(cdm$exposure_cohort) %>%
                       dplyr::filter(cohort_definition_id %in%  c(1,2)) %>%
                       dplyr::pull("cohort_name")))
   expect_equal(sort(unique(surv$variable)),
-               sort(c(omopgenerics::settings(cdm2$cohort1) %>%
+               sort(c(omopgenerics::settings(cdm$cohort1) %>%
                         dplyr::filter(cohort_definition_id %in%  c(2,3)) %>%
                         dplyr::pull("cohort_name"),
-                      omopgenerics::settings(cdm2$cohort2) %>%
+                      omopgenerics::settings(cdm$cohort2) %>%
                         dplyr::filter(cohort_definition_id %in% c(4,5)) %>%
                         dplyr::pull("cohort_name"))))
 
   #  two target, two outcome, two competing risk - without specifying
-  surv <- estimateCompetingRiskSurvival(cdm2,
+  surv <- estimateCompetingRiskSurvival(cdm,
                                         targetCohortTable = "exposure_cohort",
                                         outcomeCohortTable = "cohort1",
                                         competingOutcomeCohortTable  = "cohort2"
   ) %>% asSurvivalResult()
   expect_equal(sort(unique(surv$target_cohort)),
-               sort(omopgenerics::settings(cdm2$exposure_cohort) %>%
+               sort(omopgenerics::settings(cdm$exposure_cohort) %>%
                       dplyr::filter(cohort_definition_id %in%  c(1,2)) %>%
                       dplyr::pull("cohort_name")))
   expect_equal(sort(unique(surv$variable)),
-               sort(c(omopgenerics::settings(cdm2$cohort1) %>%
+               sort(c(omopgenerics::settings(cdm$cohort1) %>%
                         dplyr::filter(cohort_definition_id %in%  c(2,3)) %>%
                         dplyr::pull("cohort_name"),
-                      omopgenerics::settings(cdm2$cohort2) %>%
+                      omopgenerics::settings(cdm$cohort2) %>%
                         dplyr::filter(cohort_definition_id %in% c(4,5)) %>%
                         dplyr::pull("cohort_name"))))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
 })
 
@@ -646,15 +629,15 @@ test_that("required estimateGap", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -665,26 +648,17 @@ test_that("required estimateGap", {
       cohort2 = competing_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # one target, one outcome
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       targetCohortId = 1,
                                       outcomeCohortTable = "cohort1",
                                       outcomeCohortId = 2
   ) %>% asSurvivalResult()
 
-  surv_pair <- estimateSingleEventSurvival(cdm2,
+  surv_pair <- estimateSingleEventSurvival(cdm,
                                            targetCohortTable = "exposure_cohort",
                                            targetCohortId = 1,
                                            outcomeCohortTable = "cohort1",
@@ -698,7 +672,7 @@ test_that("required estimateGap", {
   expect_true(all.equal(surv_pair, surv2, check.attributes = FALSE))
 
   # two targets, two outcomes, competing risk event
-  survCR <- estimateCompetingRiskSurvival(cdm2,
+  survCR <- estimateCompetingRiskSurvival(cdm,
                                           targetCohortTable = "exposure_cohort",
                                           targetCohortId = c(1,2),
                                           outcomeCohortTable = "cohort1",
@@ -707,7 +681,7 @@ test_that("required estimateGap", {
                                           competingOutcomeCohortId = 4
   ) %>% asSurvivalResult()
 
-  survCR_time <- estimateCompetingRiskSurvival(cdm2,
+  survCR_time <- estimateCompetingRiskSurvival(cdm,
                                                targetCohortTable = "exposure_cohort",
                                                targetCohortId = c(1,2),
                                                outcomeCohortTable = "cohort1",
@@ -722,7 +696,7 @@ test_that("required estimateGap", {
 
   expect_true(all.equal(survCR, survCR_time, check.attributes = FALSE))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
 })
 
@@ -781,15 +755,15 @@ test_that("funcionality with created dataset", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -799,19 +773,10 @@ test_that("funcionality with created dataset", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # No competing events
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1"
   ) %>%
@@ -837,7 +802,7 @@ test_that("funcionality with created dataset", {
                     dplyr::filter(time == 0) %>%
                     dplyr::pull("n_risk") %in%  c(3)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
   # Competing events
   outcome_cohort <- dplyr::tibble(
@@ -870,15 +835,15 @@ test_that("funcionality with created dataset", {
   )
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -889,18 +854,9 @@ test_that("funcionality with created dataset", {
       cohort2 = competing_risk_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  surv2 <- estimateCompetingRiskSurvival(cdm2,
+  surv2 <- estimateCompetingRiskSurvival(cdm,
                                          targetCohortTable = "exposure_cohort",
                                          outcomeCohortTable = "cohort1",
                                          competingOutcomeCohortTable = "cohort2",
@@ -922,7 +878,7 @@ test_that("funcionality with created dataset", {
   expect_true(all(attr(surv2, "events") %>%
                     dplyr::pull("time") %in%  c(seq(0,981, by = 30), 981)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
   # Censor at cohort end
   outcome_cohort <- dplyr::tibble(
@@ -946,15 +902,15 @@ test_that("funcionality with created dataset", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -964,18 +920,9 @@ test_that("funcionality with created dataset", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  surv3 <- estimateSingleEventSurvival(cdm2, "exposure_cohort",
+  surv3 <- estimateSingleEventSurvival(cdm, "exposure_cohort",
                                        outcomeCohortTable = "cohort1",
                                        censorOnCohortExit = TRUE
   ) %>%
@@ -990,9 +937,9 @@ test_that("funcionality with created dataset", {
   expect_true(all(surv3  %>%
                     dplyr::select(estimate) %>% dplyr::pull() - c(rep(1, 6), rep(0.667, 25), 0) < c(0.01)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1002,19 +949,10 @@ test_that("funcionality with created dataset", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # Censor by follow up days
-  surv4 <- estimateSingleEventSurvival(cdm2, "exposure_cohort",
+  surv4 <- estimateSingleEventSurvival(cdm, "exposure_cohort",
                                        outcomeCohortTable = "cohort1",
                                        followUpDays = 10
   ) %>%
@@ -1031,7 +969,7 @@ test_that("funcionality with created dataset", {
                     dplyr::pull("time") %in%  c(0:10)))
 
   # if followUpDays larger than last of the times, follow until then
-  surv4b <- estimateSingleEventSurvival(cdm2, "exposure_cohort",
+  surv4b <- estimateSingleEventSurvival(cdm, "exposure_cohort",
                                         outcomeCohortTable = "cohort1",
                                         followUpDays = 40
   ) %>%
@@ -1041,7 +979,7 @@ test_that("funcionality with created dataset", {
   expect_true(all(attr(surv4, "events") %>%
                     dplyr::pull("time") %in%  c(0:40)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
   outcome_cohort <- dplyr::tibble(
     cohort_definition_id = c(1, 1, 1, 1, 1),
@@ -1062,7 +1000,7 @@ test_that("funcionality with created dataset", {
     )
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1072,19 +1010,10 @@ test_that("funcionality with created dataset", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # Strata
-  surv5 <- estimateSingleEventSurvival(cdm2, "exposure_cohort",
+  surv5 <- estimateSingleEventSurvival(cdm, "exposure_cohort",
                                        outcomeCohortTable = "cohort1",
                                        strata = list(
                                          c("age_group"),
@@ -1144,7 +1073,7 @@ test_that("funcionality with created dataset", {
                                           blood_type == "B") %>%
                     dplyr::select(estimate) %>% dplyr::pull() - c(rep(1, 6), rep(0.5, 25), 0) < c(0.01)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
   outcome_cohort <- dplyr::tibble(
     cohort_definition_id = c(1, 1, 1, 1),
@@ -1163,7 +1092,7 @@ test_that("funcionality with created dataset", {
     )
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1173,19 +1102,10 @@ test_that("funcionality with created dataset", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # Washout for outcome
-  surv6 <- estimateSingleEventSurvival(cdm2,
+  surv6 <- estimateSingleEventSurvival(cdm,
                                        targetCohortTable = "exposure_cohort",
                                        outcomeCohortTable = "cohort1"
   ) %>%
@@ -1199,7 +1119,7 @@ test_that("funcionality with created dataset", {
   expect_true(all(surv6 %>%
                     dplyr::select(estimate) %>% dplyr::pull() - c(rep(1, 6), rep(0.5, 25), 0) < c(0.01)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
   outcome_cohort <- dplyr::tibble(
     cohort_definition_id = c(1, 1, 1, 1),
@@ -1218,7 +1138,7 @@ test_that("funcionality with created dataset", {
     )
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1228,19 +1148,10 @@ test_that("funcionality with created dataset", {
       cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   # Censor on date
-  surv7 <- estimateSingleEventSurvival(cdm2,
+  surv7 <- estimateSingleEventSurvival(cdm,
                                        targetCohortTable = "exposure_cohort",
                                        outcomeCohortTable = "cohort1",
                                        censorOnDate = as.Date("2020-05-04")
@@ -1255,7 +1166,7 @@ test_that("funcionality with created dataset", {
   expect_true(all(surv7 %>%
                     dplyr::select(estimate)%>% dplyr::pull() - c(rep(1, 6), 0.5, 0.5, 0.5, 0) < c(0.01)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("different exposure cohort ids", {
@@ -1306,15 +1217,15 @@ test_that("different exposure cohort ids", {
   )
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1324,20 +1235,11 @@ test_that("different exposure cohort ids", {
       cohort2 = outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
-
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
+  )
 
   surv8 <-
     estimateSingleEventSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       targetCohortTable = "cohort1",
       targetCohortId = 1,
       outcomeCohortTable = "cohort2",
@@ -1357,7 +1259,7 @@ test_that("different exposure cohort ids", {
 
   surv9 <-
     estimateSingleEventSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       targetCohortTable = "cohort1",
       targetCohortId = 2,
       outcomeCohortTable = "cohort2",
@@ -1376,7 +1278,7 @@ test_that("different exposure cohort ids", {
                     dplyr::filter(time == 0) %>% dplyr::select(n_risk) %>%
                     dplyr::pull() %in%  c(1)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("expected errors", {
@@ -1435,15 +1337,15 @@ test_that("within cohort survival", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1452,18 +1354,10 @@ test_that("within cohort survival", {
       cohort1 = cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
 
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "cohort1",
                                       targetCohortId = 1,
                                       outcomeCohortTable = "cohort1",
@@ -1473,7 +1367,7 @@ test_that("within cohort survival", {
   ) %>% asSurvivalResult()
   expect_true(max(attr(surv, "events") %>% dplyr::select(n_risk) %>% dplyr::pull(), na.rm = TRUE) == 3)
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("strata specific survival", {
@@ -1548,15 +1442,15 @@ test_that("strata specific survival", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1567,25 +1461,16 @@ test_that("strata specific survival", {
       cohort2 = other_outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1",
                                       strata = list("sex")
   ) %>%
     omopgenerics::suppress(minCellCount = 1) %>%
     asSurvivalResult()
-  surv_cr <- estimateCompetingRiskSurvival(cdm2,
+  surv_cr <- estimateCompetingRiskSurvival(cdm,
                                            targetCohortTable = "exposure_cohort",
                                            outcomeCohortTable = "cohort1",
                                            competingOutcomeCohortTable = "cohort2",
@@ -1595,16 +1480,16 @@ test_that("strata specific survival", {
     asSurvivalResult()
 
   # only males
-  cdm2[["exposure_cohort_m"]] <- cdm2$exposure_cohort %>%
+  cdm[["exposure_cohort_m"]] <- cdm$exposure_cohort %>%
     dplyr::filter(sex =="Male") %>%
     dplyr::compute(temporary = FALSE, name = "exposure_cohort_m")
-  surv_m <- estimateSingleEventSurvival(cdm2,
+  surv_m <- estimateSingleEventSurvival(cdm,
                                         targetCohortTable = "exposure_cohort_m",
                                         outcomeCohortTable = "cohort1"
   ) %>%
     omopgenerics::suppress(minCellCount = 1) %>%
     asSurvivalResult()
-  surv_cr_m <- estimateCompetingRiskSurvival(cdm2,
+  surv_cr_m <- estimateCompetingRiskSurvival(cdm,
                                              targetCohortTable = "exposure_cohort_m",
                                              outcomeCohortTable = "cohort1",
                                              competingOutcomeCohortTable = "cohort2"
@@ -1658,8 +1543,8 @@ test_that("strata specific survival", {
   )
 
   # strata with only one value
-  cdm2$exposure_cohort <- cdm2$exposure_cohort %>% dplyr::mutate(a = "X")
-  surv <- estimateSingleEventSurvival(cdm2,
+  cdm$exposure_cohort <- cdm$exposure_cohort %>% dplyr::mutate(a = "X")
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1",
                                       strata = list("sex", "a")
@@ -1667,7 +1552,7 @@ test_that("strata specific survival", {
     omopgenerics::suppress(minCellCount = 1) %>%
     asSurvivalResult()
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("multiple rows per person - same observation period", {
@@ -1736,15 +1621,15 @@ test_that("multiple rows per person - same observation period", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1755,18 +1640,9 @@ test_that("multiple rows per person - same observation period", {
       cohort2 = competing_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  expect_no_error(surv <- estimateSingleEventSurvival(cdm2,
+  expect_no_error(surv <- estimateSingleEventSurvival(cdm,
                                                       targetCohortTable = "exposure_cohort",
                                                       outcomeCohortTable = "cohort1"
   ) %>%
@@ -1782,14 +1658,14 @@ test_that("multiple rows per person - same observation period", {
                     dplyr::pull("number_records")) == 5)
 
   ## competing risk
-  expect_no_error(surv <- estimateCompetingRiskSurvival(cdm2,
+  expect_no_error(surv <- estimateCompetingRiskSurvival(cdm,
                                                         targetCohortTable = "exposure_cohort",
                                                         outcomeCohortTable = "cohort1",
                                                         competingOutcomeCohortTable = "cohort2"
   ) %>% asSurvivalResult())
 
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("multiple outcomes competing risk", {
@@ -1948,15 +1824,15 @@ test_that("minimum survival days", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -1967,18 +1843,9 @@ test_that("minimum survival days", {
       cohort2 = other_outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,
-                                   cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1",
                                       strata = list("sex")
@@ -1991,7 +1858,7 @@ test_that("minimum survival days", {
                               variable_name == "excluded_records") %>%
                 dplyr::pull(count) == 1)
 
-  surv_cr <- estimateCompetingRiskSurvival(cdm2,
+  surv_cr <- estimateCompetingRiskSurvival(cdm,
                                            targetCohortTable = "exposure_cohort",
                                            outcomeCohortTable = "cohort1",
                                            competingOutcomeCohortTable = "cohort2",
@@ -2005,7 +1872,7 @@ test_that("minimum survival days", {
                               variable_name == "excluded_records") %>%
                 dplyr::pull(count) == 1)
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 
 })
 
@@ -2083,15 +1950,15 @@ test_that("outcomeWashout", {
 
   person <- dplyr::tibble(
     person_id = c(1, 2, 3, 4, 5),
-    year_of_birth = c(rep("1990", 5)),
-    month_of_birth = c(rep("02", 5)),
-    day_of_birth = c(rep("11", 5)),
+    year_of_birth = c(rep(1990, 5)),
+    month_of_birth = c(rep(02, 5)),
+    day_of_birth = c(rep(11, 5)),
     gender_concept_id = c(rep(0,5)),
     ethnicity_concept_id = c(rep(0,5)),
     race_concept_id = c(rep(0,5))
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -2102,24 +1969,16 @@ test_that("outcomeWashout", {
       cohort2 = other_outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm2 <- CDMConnector::copyCdmTo(db,cdm,
-                                   schema = "main",
-                                   overwrite = TRUE))
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  surv <- estimateSingleEventSurvival(cdm2,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1"
   ) %>%
     omopgenerics::suppress(minCellCount = 1) %>%
     asSurvivalResult()
 
-  surv_w0 <- estimateSingleEventSurvival(cdm2,
+  surv_w0 <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1",
                                       outcomeWashout = 1
@@ -2154,7 +2013,7 @@ test_that("outcomeWashout", {
     )
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -2165,17 +2024,9 @@ test_that("outcomeWashout", {
       cohort2 = other_outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm3 <- CDMConnector::copyCdmTo(db,cdm,
-                                                   schema = "main",
-                                                   overwrite = TRUE))
-
-  attr(cdm3, "cdm_schema") <- "main"
-  attr(cdm3, "write_schema") <- "main"
-
-  surv <- estimateSingleEventSurvival(cdm3,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1",
                                       outcomeWashout = 0,
@@ -2209,7 +2060,7 @@ test_that("outcomeWashout", {
     )
   )
 
-  suppressWarnings(cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -2220,17 +2071,9 @@ test_that("outcomeWashout", {
       cohort2 = other_outcome_cohort
     ),
     cdmName = "mock_es"
-  ))
+  )
 
-  db <- DBI::dbConnect(duckdb::duckdb(), ":memory:")
-  suppressWarnings(cdm3 <- CDMConnector::copyCdmTo(db,cdm,
-                                                   schema = "main",
-                                                   overwrite = TRUE))
-
-  attr(cdm3, "cdm_schema") <- "main"
-  attr(cdm3, "write_schema") <- "main"
-
-  surv <- estimateSingleEventSurvival(cdm3,
+  surv <- estimateSingleEventSurvival(cdm,
                                       targetCohortTable = "exposure_cohort",
                                       outcomeCohortTable = "cohort1",
                                       outcomeWashout = 0,
@@ -2244,8 +2087,7 @@ test_that("outcomeWashout", {
   expect_true(attr(surv, "summary") %>%
                 dplyr::pull("number_records") == 5)
 
-  CDMConnector::cdmDisconnect(cdm3)
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("restrictedMeanFollowUp", {
@@ -2385,7 +2227,6 @@ test_that("n_censor", {
   })
 
 test_that("no outcomes among cohort", {
-
     cdm <- mockMGUS2cdm()
     cdm$death_cohort <- cdm$death_cohort %>%
       dplyr::filter(subject_id == 1)
@@ -2397,14 +2238,36 @@ test_that("no outcomes among cohort", {
                                                         outcomeCohortTable = "death_cohort"
     ))
 
+    expect_true(surv %>%
+                  tableSurvival(type = "tibble") %>%
+                  dplyr::pull(`[header_name]Estimate name\n[header_level]Number events`) == 0)
+
     # empty death table
     cdm$death_cohort <- cdm$death_cohort %>%
       dplyr::filter(subject_id == 2)
+
     expect_warning(surv <- estimateSingleEventSurvival(cdm,
-                                                       targetCohortTable = "mgus_diagnosis",
-                                                       outcomeCohortTable = "death_cohort"
+                                        targetCohortTable = "mgus_diagnosis",
+                                        outcomeCohortTable = "death_cohort"
     ))
 
+    expect_true(surv %>%
+                  tableSurvival(type = "tibble") %>%
+                  dplyr::pull(`[header_name]Estimate name\n[header_level]Number events`) == 0)
+
+    cdm <- bind(cdm$progression, cdm$death_cohort, name = "outcome_cohorts")
+
+    expect_warning(surv <- estimateSingleEventSurvival(cdm,
+                                        targetCohortTable = "mgus_diagnosis",
+                                        outcomeCohortTable = "outcome_cohorts"
+    ))
+
+    expect_true(all(surv %>%
+                  tableSurvival(type = "tibble") %>%
+                  dplyr::arrange("Outcome name") %>%
+                  dplyr::pull(`[header_name]Estimate name\n[header_level]Number events`) == c(115,0)))
+
+    CDMConnector::cdmDisconnect(cdm)
   })
 
 test_that("tables from cdm do not change after estimation", {
@@ -2506,6 +2369,17 @@ test_that("empty input cohort after input filtering", {
   CDMConnector::cdmDisconnect(cdm)
 })
 
+test_that("empty input cohort before input filtering", {
+  cdm <- mockMGUS2cdm()
+  cdm$mgus_diagnosis <- cdm$mgus_diagnosis %>%
+    dplyr::filter(cohort_definition_id == 10)
+  expect_warning(surv <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "death_cohort"))
+expect_true(surv %>%
+              dplyr::tally() %>%
+              dplyr::pull() == 0)
+  CDMConnector::cdmDisconnect(cdm)
+})
+
 test_that("multiple strata names", {
   cdm <- mockMGUS2cdm()
   cdm$mgus_diagnosis <- cdm$mgus_diagnosis %>%
@@ -2519,6 +2393,27 @@ test_that("multiple strata names", {
 
   expect_true(
     surv %>% asSurvivalResult() %>% dplyr::select( sex) %>% dplyr::distinct() %>% dplyr::tally() == 3
+  )
+
+  CDMConnector::cdmDisconnect(cdm)
+})
+
+test_that("cohort id or cohort name as inputs", {
+  cdm <- mockMGUS2cdm()
+  cdm <- bind(cdm$progression, cdm$death_cohort, name = "outcome_cohorts")
+
+  surv_id <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "outcome_cohorts", outcomeCohortId = 2)
+  surv_name <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "outcome_cohorts", outcomeCohortId = "death_cohort")
+
+  expect_true(
+    all.equal(surv_id, surv_name, check.attributes = FALSE)
+  )
+
+  surv_cr_id <- estimateCompetingRiskSurvival(cdm, "mgus_diagnosis", "progression", "outcome_cohorts", competingOutcomeCohortId = 2)
+  surv_cr_name <- estimateCompetingRiskSurvival(cdm, "mgus_diagnosis", "progression", "outcome_cohorts", competingOutcomeCohortId = "death_cohort")
+
+  expect_true(
+    all.equal(surv_cr_id, surv_cr_name, check.attributes = FALSE)
   )
 
   CDMConnector::cdmDisconnect(cdm)

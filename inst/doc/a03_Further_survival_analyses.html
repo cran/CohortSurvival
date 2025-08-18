@@ -377,20 +377,20 @@ columns previously added to the cohort by the user.</p>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.2.2 [root@Darwin 24.5.0:R 4.5.0/:memory:]</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 14, 15, 16, 1…</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 1…</span></span>
 <span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
 <span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
-<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 88, 78, 94, 68, 90, 90, 89, 87, 79, 86, 89, 80, 8…</span></span>
-<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, F, M, M, F, M, F, F, F, M, F, F, M, F, F, M, M…</span></span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 88, 78, 94, 68, 90, 90, 89, 87, 79, 86, 89, 87, 8…</span></span>
+<span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, F, M, M, F, M, F, F, F, M, F, M, F, M, F, F, M…</span></span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 13.1, 11.5, 10.5, 15.2, 10.7, 12.9, 10.5, 12.3, 9…</span></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.30, 1.20, 1.50, 1.20, 0.80, 1.00, 0.90, 1.20, 1…</span></span>
 <span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.5, 2.0, 2.6, 1.2, 1.0, 0.5, 1.3, 1.6, 2.3, 2.3,…</span></span>
 <span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;…</span></span>
-<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;int&gt; 30, 25, 46, 92, 8, 4, 151, 2, 136, 2, 108, 14, 18…</span></span>
+<span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;int&gt; 30, 25, 46, 92, 8, 4, 151, 2, 136, 2, 108, 10, 14…</span></span>
 <span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; $ status               &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 30, 25, 46, 92, 8, 4, 151, 2, 136, 2, 108, 14, 18…</span></span></code></pre></div>
+<span id="cb3-25"><a href="#cb3-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 30, 25, 46, 92, 8, 4, 151, 2, 136, 2, 108, 10, 14…</span></span></code></pre></div>
 <p>We can decide to change some of the default parameters in this
 function. Information on all these can be found
 <code>?addCohortSurvival</code>. For instance, we can choose to exclude
@@ -410,20 +410,20 @@ how that gives us different results:</p>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.2.2 [root@Darwin 24.5.0:R 4.5.0/:memory:]</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 213, 1245, 1248, 1340, 1374, 1376, 1380, 1384, 94…</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 213, 671, 941, 1245, 1248, 1340, 1374, 1376, 1380…</span></span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1994-01-01, 1994-01-01, 1994-01-01, 1994-01-01, …</span></span>
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1994-01-01, 1994-01-01, 1994-01-01, 1994-01-01, …</span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 93, 82, 87, 67, 68, 67, 69, 79, 85, 81, 66, 86, 8…</span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, M, M, F, F, F, M, M, M, M, M, F, F, F, F, F, M…</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 12.8, 11.4, 12.7, 12.2, 9.2, 13.7, 15.0, 9.6, 13.…</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.1, 1.5, 1.5, 1.4, 1.8, 1.1, 0.8, 1.1, 1.1, 1.4,…</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.8, 1.4, 0.5, 1.2, 0.5, 1.5, 0.0, 1.7, 1.5, 1.3,…</span></span>
-<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&lt;70&quot;, &quot;&lt;70&quot;, &quot;&lt;70…</span></span>
-<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;dbl&gt; 19, 1, 10, 46, 40, 41, 22, 6, 12, 43, 31, 57, 52,…</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 93, 81, 85, 82, 87, 67, 68, 67, 69, 66, 79, 86, 8…</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, M, M, M, M, F, F, F, M, M, M, F, F, F, F, F, M…</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 12.8, 13.0, 13.6, 11.4, 12.7, 12.2, 9.2, 13.7, 15…</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.1, 1.4, 1.1, 1.5, 1.5, 1.4, 1.8, 1.1, 0.8, 2.0,…</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.8, 1.3, 1.5, 1.4, 0.5, 1.2, 0.5, 1.5, 0.0, 0.0,…</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&lt;…</span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;dbl&gt; 19, 43, 12, 1, 10, 46, 40, 41, 22, 31, 6, 57, 52,…</span></span>
 <span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; $ status               &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0…</span></span>
-<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 19, 1, 10, 46, 40, 41, 22, 6, 12, 43, 31, 57, 52,…</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 19, 43, 12, 1, 10, 46, 40, 41, 22, 31, 6, 57, 52,…</span></span>
 <span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">%&gt;%</span></span>
 <span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>       <span class="fu">addCohortSurvival</span>(</span>
 <span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>       <span class="at">cdm =</span> cdm,</span>
@@ -435,17 +435,17 @@ how that gives us different results:</p>
 <span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.2.2 [root@Darwin 24.5.0:R 4.5.0/:memory:]</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
 <span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
-<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 213, 1245, 1248, 1340, 1374, 1376, 1380, 1384, 94…</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 213, 671, 941, 1245, 1248, 1340, 1374, 1376, 1380…</span></span>
 <span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1994-01-01, 1994-01-01, 1994-01-01, 1994-01-01, …</span></span>
 <span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="co">#&gt; $ cohort_end_date      &lt;date&gt; 1994-01-01, 1994-01-01, 1994-01-01, 1994-01-01, …</span></span>
-<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 93, 82, 87, 67, 68, 67, 69, 79, 85, 81, 66, 86, 8…</span></span>
-<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, M, M, F, F, F, M, M, M, M, M, F, F, F, F, F, M…</span></span>
-<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 12.8, 11.4, 12.7, 12.2, 9.2, 13.7, 15.0, 9.6, 13.…</span></span>
-<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.1, 1.5, 1.5, 1.4, 1.8, 1.1, 0.8, 1.1, 1.1, 1.4,…</span></span>
-<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.8, 1.4, 0.5, 1.2, 0.5, 1.5, 0.0, 1.7, 1.5, 1.3,…</span></span>
-<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&lt;70&quot;, &quot;&lt;70&quot;, &quot;&lt;70…</span></span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; $ age                  &lt;dbl&gt; 93, 81, 85, 82, 87, 67, 68, 67, 69, 66, 79, 86, 8…</span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt; $ sex                  &lt;fct&gt; F, M, M, M, M, F, F, F, M, M, M, F, F, F, F, F, M…</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="co">#&gt; $ hgb                  &lt;dbl&gt; 12.8, 13.0, 13.6, 11.4, 12.7, 12.2, 9.2, 13.7, 15…</span></span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#&gt; $ creat                &lt;dbl&gt; 1.1, 1.4, 1.1, 1.5, 1.5, 1.4, 1.8, 1.1, 0.8, 2.0,…</span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="co">#&gt; $ mspike               &lt;dbl&gt; 0.8, 1.3, 1.5, 1.4, 0.5, 1.2, 0.5, 1.5, 0.0, 0.0,…</span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="co">#&gt; $ age_group            &lt;chr&gt; &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&gt;=70&quot;, &quot;&lt;70&quot;, &quot;&lt;…</span></span>
 <span id="cb4-48"><a href="#cb4-48" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
 <span id="cb4-49"><a href="#cb4-49" tabindex="-1"></a><span class="co">#&gt; $ status               &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span>
 <span id="cb4-50"><a href="#cb4-50" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></span></code></pre></div>

@@ -182,7 +182,7 @@ plotSurvival <- function(result,
 
         riskData <- generateRiskData(subResult, riskTimes, colour)
 
-        if (nrow(riskData) == 0) {
+        if (nrow(riskData) == 1) {
           cli::cli_abort("Check the riskInterval provided. It seems that interval
                         does not provide the times for which n_risk can be retrieved.
                         Check the `events` attribute from your asSurvivalResult()
@@ -217,7 +217,7 @@ plotSurvival <- function(result,
 
       riskData <- generateRiskData(result, riskTimes, colour)
 
-      if (nrow(riskData) == 0) {
+      if (nrow(riskData) == 1) {
         cli::cli_abort("Check the riskInterval provided. It seems that interval
                       does not provide the times for which n_risk can be retrieved.
                       Check the `events` attribute from your asSurvivalResult()
@@ -273,14 +273,14 @@ generateRiskData <- function(result, riskTimes, colour) {
     riskdata <- attr(result, "events") %>%
       dplyr::filter(.data$time %in% riskTimes) %>%
       dplyr::mutate(n_risk = as.character(.data$n_risk)) %>%
-      tidyr::unite("colour", colour, sep = " and ", remove = FALSE) %>%
+      tidyr::unite("colour", dplyr::all_of(colour), sep = " and ", remove = FALSE) %>%
       dplyr::select("time", "n_risk", "colour") %>%
       dplyr::mutate(colour := stringr::str_replace_all(.data$colour, "&&&", "and")) %>%
       dplyr::mutate(timeb = .data$time,
                     time = as.character(.data$time),
                     colour := paste0("n_risk", .data$colour)) %>%
       dplyr::distinct() %>%
-      tidyr::pivot_wider(names_from = dplyr::any_of("colour"), values_from = .data$n_risk)
+      tidyr::pivot_wider(names_from = dplyr::any_of("colour"), values_from = "n_risk")
 
     riskdataend <- dplyr::tibble(
       time = as.character(riskTimes),
@@ -308,4 +308,37 @@ addRibbon <- function(plot){
                    ymax = .data$estimate_95CI_upper),
       alpha = 0.3, color = NA, show.legend = FALSE) +
     ggplot2::geom_line(linewidth = 0.25)
+}
+
+#' Variables that can be used for faceting and colouring survival plots
+#'
+#' @param result Survival results
+#' @param varying If FALSE (default), only variables with non-unique values will be
+#' returned, otherwise all available variables will be returned.
+#'
+#' @export
+#'
+#' @examples
+#' \donttest{
+#' cdm <- mockMGUS2cdm()
+#' surv <- estimateSingleEventSurvival(cdm,
+#'                                     targetCohortTable = "mgus_diagnosis",
+#'                                     outcomeCohortTable = "death_cohort")
+#' availableSurvivalGrouping(surv)
+#' }
+
+availableSurvivalGrouping <- function(result, varying = FALSE) {
+  omopgenerics::assertLogical(varying, length = 1)
+  result <- asSurvivalResult(result)
+  cols <- colnames(result)
+  if (!varying) {
+    pos <- lapply(as.list(cols), function(x, res = result) {
+      res %>%
+        dplyr::pull(.data[[x]]) %>%
+        unique() %>%
+        length()
+    }) %>% unlist()
+    cols <- cols[pos > 1]
+  }
+  return(cols)
 }

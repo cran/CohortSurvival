@@ -370,7 +370,7 @@ progression to multiple myeloma as outcomes.</p>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; Columns: 10</span></span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.2.2 [root@Darwin 24.5.0:R 4.5.0/:memory:]</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15…</span></span>
 <span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
@@ -386,7 +386,7 @@ progression to multiple myeloma as outcomes.</p>
 <span id="cb3-18"><a href="#cb3-18" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-19"><a href="#cb3-19" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-20"><a href="#cb3-20" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
-<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.2.2 [root@Darwin 24.5.0:R 4.5.0/:memory:]</span></span>
+<span id="cb3-21"><a href="#cb3-21" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
 <span id="cb3-22"><a href="#cb3-22" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-23"><a href="#cb3-23" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 1…</span></span>
 <span id="cb3-24"><a href="#cb3-24" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-31, 1968-01-26, 1980-02-16, 1977-04-03, …</span></span>
@@ -396,7 +396,7 @@ progression to multiple myeloma as outcomes.</p>
 <span id="cb3-28"><a href="#cb3-28" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-29"><a href="#cb3-29" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-30"><a href="#cb3-30" tabindex="-1"></a><span class="co">#&gt; Columns: 4</span></span>
-<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.2.2 [root@Darwin 24.5.0:R 4.5.0/:memory:]</span></span>
+<span id="cb3-31"><a href="#cb3-31" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
 <span id="cb3-32"><a href="#cb3-32" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-33"><a href="#cb3-33" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 56, 81, 83, 111, 124, 127, 147, 163, 165, 167, 18…</span></span>
 <span id="cb3-34"><a href="#cb3-34" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1978-01-30, 1985-01-15, 1974-08-17, 1993-01-14, …</span></span>
@@ -440,20 +440,20 @@ we did in the previous vignette:</p>
 <p>The summary table of survival now has a row for each of the
 outcomes:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">tableSurvival</span>(MGUS_death_prog) </span></code></pre></div>
-<div id="tmhqrrvuyg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tmhqrrvuyg table {
+<div id="depwhpfaxk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#depwhpfaxk table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#tmhqrrvuyg thead, #tmhqrrvuyg tbody, #tmhqrrvuyg tfoot, #tmhqrrvuyg tr, #tmhqrrvuyg td, #tmhqrrvuyg th {
+#depwhpfaxk thead, #depwhpfaxk tbody, #depwhpfaxk tfoot, #depwhpfaxk tr, #depwhpfaxk td, #depwhpfaxk th {
 border-style: none;
 }
-#tmhqrrvuyg p {
+#depwhpfaxk p {
 margin: 0;
 padding: 0;
 }
-#tmhqrrvuyg .gt_table {
+#depwhpfaxk .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -466,23 +466,23 @@ font-style: normal;
 background-color: #FFFFFF;
 width: auto;
 border-top-style: solid;
-border-top-width: 2px;
-border-top-color: #A8A8A8;
-border-right-style: none;
-border-right-width: 2px;
-border-right-color: #D3D3D3;
+border-top-width: 3px;
+border-top-color: #D9D9D9;
+border-right-style: solid;
+border-right-width: 3px;
+border-right-color: #D9D9D9;
 border-bottom-style: solid;
-border-bottom-width: 2px;
-border-bottom-color: #A8A8A8;
-border-left-style: none;
-border-left-width: 2px;
-border-left-color: #D3D3D3;
+border-bottom-width: 3px;
+border-bottom-color: #D9D9D9;
+border-left-style: solid;
+border-left-width: 3px;
+border-left-color: #D9D9D9;
 }
-#tmhqrrvuyg .gt_caption {
+#depwhpfaxk .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#tmhqrrvuyg .gt_title {
+#depwhpfaxk .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -493,7 +493,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#tmhqrrvuyg .gt_subtitle {
+#depwhpfaxk .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -504,7 +504,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#tmhqrrvuyg .gt_heading {
+#depwhpfaxk .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -515,12 +515,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_bottom_border {
+#depwhpfaxk .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_col_headings {
+#depwhpfaxk .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -534,7 +534,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_col_heading {
+#depwhpfaxk .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -553,7 +553,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#tmhqrrvuyg .gt_column_spanner_outer {
+#depwhpfaxk .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -564,13 +564,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#tmhqrrvuyg .gt_column_spanner_outer:first-child {
+#depwhpfaxk .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#tmhqrrvuyg .gt_column_spanner_outer:last-child {
+#depwhpfaxk .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#tmhqrrvuyg .gt_column_spanner {
+#depwhpfaxk .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -581,10 +581,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#tmhqrrvuyg .gt_spanner_row {
+#depwhpfaxk .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#tmhqrrvuyg .gt_group_heading {
+#depwhpfaxk .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -609,7 +609,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#tmhqrrvuyg .gt_empty_group_heading {
+#depwhpfaxk .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -623,13 +623,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#tmhqrrvuyg .gt_from_md > :first-child {
+#depwhpfaxk .gt_from_md > :first-child {
 margin-top: 0;
 }
-#tmhqrrvuyg .gt_from_md > :last-child {
+#depwhpfaxk .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#tmhqrrvuyg .gt_row {
+#depwhpfaxk .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -647,7 +647,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#tmhqrrvuyg .gt_stub {
+#depwhpfaxk .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -659,7 +659,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tmhqrrvuyg .gt_stub_row_group {
+#depwhpfaxk .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -672,13 +672,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#tmhqrrvuyg .gt_row_group_first td {
+#depwhpfaxk .gt_row_group_first td {
 border-top-width: 2px;
 }
-#tmhqrrvuyg .gt_row_group_first th {
+#depwhpfaxk .gt_row_group_first th {
 border-top-width: 2px;
 }
-#tmhqrrvuyg .gt_summary_row {
+#depwhpfaxk .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -687,14 +687,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tmhqrrvuyg .gt_first_summary_row {
+#depwhpfaxk .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_first_summary_row.thick {
+#depwhpfaxk .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#tmhqrrvuyg .gt_last_summary_row {
+#depwhpfaxk .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -703,7 +703,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_grand_summary_row {
+#depwhpfaxk .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -712,7 +712,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tmhqrrvuyg .gt_first_grand_summary_row {
+#depwhpfaxk .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -721,7 +721,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_last_grand_summary_row_top {
+#depwhpfaxk .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -730,18 +730,18 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_striped {
+#depwhpfaxk .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#tmhqrrvuyg .gt_table_body {
+#depwhpfaxk .gt_table_body {
 border-top-style: solid;
-border-top-width: 2px;
-border-top-color: #D3D3D3;
+border-top-width: 3px;
+border-top-color: #D9D9D9;
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_footnotes {
+#depwhpfaxk .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -754,7 +754,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_footnote {
+#depwhpfaxk .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -762,7 +762,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tmhqrrvuyg .gt_sourcenotes {
+#depwhpfaxk .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -775,83 +775,83 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tmhqrrvuyg .gt_sourcenote {
+#depwhpfaxk .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tmhqrrvuyg .gt_left {
+#depwhpfaxk .gt_left {
 text-align: left;
 }
-#tmhqrrvuyg .gt_center {
+#depwhpfaxk .gt_center {
 text-align: center;
 }
-#tmhqrrvuyg .gt_right {
+#depwhpfaxk .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#tmhqrrvuyg .gt_font_normal {
+#depwhpfaxk .gt_font_normal {
 font-weight: normal;
 }
-#tmhqrrvuyg .gt_font_bold {
+#depwhpfaxk .gt_font_bold {
 font-weight: bold;
 }
-#tmhqrrvuyg .gt_font_italic {
+#depwhpfaxk .gt_font_italic {
 font-style: italic;
 }
-#tmhqrrvuyg .gt_super {
+#depwhpfaxk .gt_super {
 font-size: 65%;
 }
-#tmhqrrvuyg .gt_footnote_marks {
+#depwhpfaxk .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#tmhqrrvuyg .gt_asterisk {
+#depwhpfaxk .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#tmhqrrvuyg .gt_indent_1 {
+#depwhpfaxk .gt_indent_1 {
 text-indent: 5px;
 }
-#tmhqrrvuyg .gt_indent_2 {
+#depwhpfaxk .gt_indent_2 {
 text-indent: 10px;
 }
-#tmhqrrvuyg .gt_indent_3 {
+#depwhpfaxk .gt_indent_3 {
 text-indent: 15px;
 }
-#tmhqrrvuyg .gt_indent_4 {
+#depwhpfaxk .gt_indent_4 {
 text-indent: 20px;
 }
-#tmhqrrvuyg .gt_indent_5 {
+#depwhpfaxk .gt_indent_5 {
 text-indent: 25px;
 }
-#tmhqrrvuyg .katex-display {
+#depwhpfaxk .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#tmhqrrvuyg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#depwhpfaxk div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
   <thead>
     <tr class="gt_col_headings gt_spanner_row">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="CDM-name">CDM name</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Target-cohort">Target cohort</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome-type">Outcome type</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome-name">Outcome name</th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" style="background-color: #D9D9D9; text-align: center; font-weight: bold;" scope="colgroup" id="spanner-[header_name]Estimate name
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="CDM-name">CDM name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Target-cohort">Target cohort</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Outcome-type">Outcome type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Outcome-name">Outcome name</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" style="background-color: #D9D9D9; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="colgroup" id="spanner-[header_name]Estimate name
 [header_level]Number records">
         <div class="gt_column_spanner">Estimate name</div>
       </th>
     </tr>
     <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="[header_name]Estimate-name-[header_level]Number-records">Number records</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="[header_name]Estimate-name-[header_level]Number-events">Number events</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="[header_name]Estimate-name-[header_level]Restricted-mean-survival">Restricted mean survival</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="[header_name]Estimate-name-[header_level]Number-records">Number records</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="[header_name]Estimate-name-[header_level]Number-events">Number events</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="[header_name]Estimate-name-[header_level]Restricted-mean-survival">Restricted mean survival</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">
@@ -908,20 +908,20 @@ makes more sense in the competing outcome case.</p>
 <p>And we also now have summary statistics for each of the strata as
 well as overall.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">tableSurvival</span>(MGUS_death_prog)</span></code></pre></div>
-<div id="tfgxsfxtju" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tfgxsfxtju table {
+<div id="mdffdnyniw" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#mdffdnyniw table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#tfgxsfxtju thead, #tfgxsfxtju tbody, #tfgxsfxtju tfoot, #tfgxsfxtju tr, #tfgxsfxtju td, #tfgxsfxtju th {
+#mdffdnyniw thead, #mdffdnyniw tbody, #mdffdnyniw tfoot, #mdffdnyniw tr, #mdffdnyniw td, #mdffdnyniw th {
 border-style: none;
 }
-#tfgxsfxtju p {
+#mdffdnyniw p {
 margin: 0;
 padding: 0;
 }
-#tfgxsfxtju .gt_table {
+#mdffdnyniw .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -934,23 +934,23 @@ font-style: normal;
 background-color: #FFFFFF;
 width: auto;
 border-top-style: solid;
-border-top-width: 2px;
-border-top-color: #A8A8A8;
-border-right-style: none;
-border-right-width: 2px;
-border-right-color: #D3D3D3;
+border-top-width: 3px;
+border-top-color: #D9D9D9;
+border-right-style: solid;
+border-right-width: 3px;
+border-right-color: #D9D9D9;
 border-bottom-style: solid;
-border-bottom-width: 2px;
-border-bottom-color: #A8A8A8;
-border-left-style: none;
-border-left-width: 2px;
-border-left-color: #D3D3D3;
+border-bottom-width: 3px;
+border-bottom-color: #D9D9D9;
+border-left-style: solid;
+border-left-width: 3px;
+border-left-color: #D9D9D9;
 }
-#tfgxsfxtju .gt_caption {
+#mdffdnyniw .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#tfgxsfxtju .gt_title {
+#mdffdnyniw .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -961,7 +961,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#tfgxsfxtju .gt_subtitle {
+#mdffdnyniw .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -972,7 +972,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#tfgxsfxtju .gt_heading {
+#mdffdnyniw .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -983,12 +983,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_bottom_border {
+#mdffdnyniw .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_col_headings {
+#mdffdnyniw .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -1002,7 +1002,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_col_heading {
+#mdffdnyniw .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1021,7 +1021,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#tfgxsfxtju .gt_column_spanner_outer {
+#mdffdnyniw .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1032,13 +1032,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#tfgxsfxtju .gt_column_spanner_outer:first-child {
+#mdffdnyniw .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#tfgxsfxtju .gt_column_spanner_outer:last-child {
+#mdffdnyniw .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#tfgxsfxtju .gt_column_spanner {
+#mdffdnyniw .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -1049,10 +1049,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#tfgxsfxtju .gt_spanner_row {
+#mdffdnyniw .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#tfgxsfxtju .gt_group_heading {
+#mdffdnyniw .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1077,7 +1077,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#tfgxsfxtju .gt_empty_group_heading {
+#mdffdnyniw .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -1091,13 +1091,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#tfgxsfxtju .gt_from_md > :first-child {
+#mdffdnyniw .gt_from_md > :first-child {
 margin-top: 0;
 }
-#tfgxsfxtju .gt_from_md > :last-child {
+#mdffdnyniw .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#tfgxsfxtju .gt_row {
+#mdffdnyniw .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1115,7 +1115,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#tfgxsfxtju .gt_stub {
+#mdffdnyniw .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1127,7 +1127,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tfgxsfxtju .gt_stub_row_group {
+#mdffdnyniw .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -1140,13 +1140,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#tfgxsfxtju .gt_row_group_first td {
+#mdffdnyniw .gt_row_group_first td {
 border-top-width: 2px;
 }
-#tfgxsfxtju .gt_row_group_first th {
+#mdffdnyniw .gt_row_group_first th {
 border-top-width: 2px;
 }
-#tfgxsfxtju .gt_summary_row {
+#mdffdnyniw .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1155,14 +1155,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tfgxsfxtju .gt_first_summary_row {
+#mdffdnyniw .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_first_summary_row.thick {
+#mdffdnyniw .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#tfgxsfxtju .gt_last_summary_row {
+#mdffdnyniw .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1171,7 +1171,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_grand_summary_row {
+#mdffdnyniw .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -1180,7 +1180,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tfgxsfxtju .gt_first_grand_summary_row {
+#mdffdnyniw .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1189,7 +1189,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_last_grand_summary_row_top {
+#mdffdnyniw .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -1198,18 +1198,18 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_striped {
+#mdffdnyniw .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#tfgxsfxtju .gt_table_body {
+#mdffdnyniw .gt_table_body {
 border-top-style: solid;
-border-top-width: 2px;
-border-top-color: #D3D3D3;
+border-top-width: 3px;
+border-top-color: #D9D9D9;
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_footnotes {
+#mdffdnyniw .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1222,7 +1222,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_footnote {
+#mdffdnyniw .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -1230,7 +1230,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tfgxsfxtju .gt_sourcenotes {
+#mdffdnyniw .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -1243,84 +1243,84 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tfgxsfxtju .gt_sourcenote {
+#mdffdnyniw .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tfgxsfxtju .gt_left {
+#mdffdnyniw .gt_left {
 text-align: left;
 }
-#tfgxsfxtju .gt_center {
+#mdffdnyniw .gt_center {
 text-align: center;
 }
-#tfgxsfxtju .gt_right {
+#mdffdnyniw .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#tfgxsfxtju .gt_font_normal {
+#mdffdnyniw .gt_font_normal {
 font-weight: normal;
 }
-#tfgxsfxtju .gt_font_bold {
+#mdffdnyniw .gt_font_bold {
 font-weight: bold;
 }
-#tfgxsfxtju .gt_font_italic {
+#mdffdnyniw .gt_font_italic {
 font-style: italic;
 }
-#tfgxsfxtju .gt_super {
+#mdffdnyniw .gt_super {
 font-size: 65%;
 }
-#tfgxsfxtju .gt_footnote_marks {
+#mdffdnyniw .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#tfgxsfxtju .gt_asterisk {
+#mdffdnyniw .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#tfgxsfxtju .gt_indent_1 {
+#mdffdnyniw .gt_indent_1 {
 text-indent: 5px;
 }
-#tfgxsfxtju .gt_indent_2 {
+#mdffdnyniw .gt_indent_2 {
 text-indent: 10px;
 }
-#tfgxsfxtju .gt_indent_3 {
+#mdffdnyniw .gt_indent_3 {
 text-indent: 15px;
 }
-#tfgxsfxtju .gt_indent_4 {
+#mdffdnyniw .gt_indent_4 {
 text-indent: 20px;
 }
-#tfgxsfxtju .gt_indent_5 {
+#mdffdnyniw .gt_indent_5 {
 text-indent: 25px;
 }
-#tfgxsfxtju .katex-display {
+#mdffdnyniw .katex-display {
 display: inline-flex !important;
 margin-bottom: 0.75em !important;
 }
-#tfgxsfxtju div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#mdffdnyniw div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
 height: 0px !important;
 }
 </style>
 <table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
   <thead>
     <tr class="gt_col_headings gt_spanner_row">
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="CDM-name">CDM name</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Target-cohort">Target cohort</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Sex">Sex</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome-type">Outcome type</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold;" scope="col" id="Outcome-name">Outcome name</th>
-      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" style="background-color: #D9D9D9; text-align: center; font-weight: bold;" scope="colgroup" id="spanner-[header_name]Estimate name
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="CDM-name">CDM name</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Target-cohort">Target cohort</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Sex">Sex</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Outcome-type">Outcome type</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" style="text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="Outcome-name">Outcome name</th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="3" style="background-color: #D9D9D9; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="colgroup" id="spanner-[header_name]Estimate name
 [header_level]Number records">
         <div class="gt_column_spanner">Estimate name</div>
       </th>
     </tr>
     <tr class="gt_col_headings">
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="[header_name]Estimate-name-[header_level]Number-records">Number records</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="[header_name]Estimate-name-[header_level]Number-events">Number events</th>
-      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold;" scope="col" id="[header_name]Estimate-name-[header_level]Restricted-mean-survival">Restricted mean survival</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="[header_name]Estimate-name-[header_level]Number-records">Number records</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="[header_name]Estimate-name-[header_level]Number-events">Number events</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" style="background-color: #E1E1E1; text-align: center; font-weight: bold; border-left-width: 1px; border-left-style: solid; border-left-color: White; border-right-width: 1px; border-right-style: solid; border-right-color: White; border-top-width: 1px; border-top-style: solid; border-top-color: White; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: White;" scope="col" id="[header_name]Estimate-name-[header_level]Restricted-mean-survival">Restricted mean survival</th>
     </tr>
   </thead>
   <tbody class="gt_table_body">

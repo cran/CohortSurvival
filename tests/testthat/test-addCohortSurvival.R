@@ -32,7 +32,7 @@ test_that("working example", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -43,37 +43,29 @@ test_that("working example", {
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
   # test name argument works
-  cdm2$cohort2 <- cdm2$cohort1 %>%
+  cdm$cohort2 <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
       outcomeCohortId = 1,
       name = "cohort2"
     )
 
-  cdm2$cohort1 <- cdm2$cohort1 %>%
+  cdm$cohort1 <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
       outcomeCohortId = 1
     )
-  expect_true(all(colnames(cdm2$cohort1) %in%
+  expect_true(all(colnames(cdm$cohort1) %in%
                     c(
                       "cohort_definition_id", "subject_id",
                       "cohort_start_date", "cohort_end_date",
                       "days_to_exit", "status", "time"
                     )))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("another working example", {
@@ -208,7 +200,7 @@ test_that("censorOnCohortExit", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -220,24 +212,16 @@ test_that("censorOnCohortExit", {
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  cohortNoCensorExit <- cdm2$cohort1 %>%
+  cohortNoCensorExit <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort2",
       outcomeCohortId = 1
     ) %>%
     dplyr::arrange(subject_id)
-  cohortCensorExit <- cdm2$cohort1 %>%
+  cohortCensorExit <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort2",
       outcomeCohortId = 1,
       censorOnCohortExit = TRUE
@@ -273,7 +257,7 @@ test_that("censorOnCohortExit", {
                                    dplyr::pull()),
                             sort(c(91, 213, 60)))))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("censorOnDate", {
@@ -321,7 +305,7 @@ test_that("censorOnDate", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -333,17 +317,9 @@ test_that("censorOnDate", {
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  cohortCensorDate <- cdm2$cohort1 %>%
+  cohortCensorDate <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort2",
       outcomeCohortId = 1,
       censorOnDate = as.Date("2021-01-04")
@@ -370,7 +346,7 @@ test_that("censorOnDate", {
                             sort(c(NA, 3, 3)))))
 
   expect_error(
-    cdm2$cohort1 %>%
+    cdm$cohort1 %>%
       addCohortSurvival(
         cdm = cdm,
         outcomeCohortTable = "cohort2",
@@ -379,7 +355,7 @@ test_that("censorOnDate", {
       )
   )
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("followUpDays", {
@@ -427,7 +403,7 @@ test_that("followUpDays", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -439,25 +415,17 @@ test_that("followUpDays", {
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  cohortFollowUp <- cdm2$cohort1 %>%
+  cohortFollowUp <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort2",
       outcomeCohortId = 1,
       followUp = 20
     ) %>%
     dplyr::arrange(subject_id)
-  cohortFUandCE <- cdm2$cohort1 %>%
+  cohortFUandCE <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort2",
       outcomeCohortId = 1,
       followUp = 20,
@@ -491,7 +459,7 @@ test_that("followUpDays", {
                     dplyr::pull() ==
                     c(20,3,5)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("expected errors", {
@@ -564,18 +532,18 @@ test_that("expected errors", {
                    outcomeWashout = c(0,1)
                  ))
 
-  #  cdm <- PatientProfiles::mockPatientProfiles()
-  #  cdm[["cohort1"]] <- cdm[["cohort1"]] %>%
-  #    dplyr::group_by(subject_id) %>%
-  #    dplyr::filter(dplyr::row_number() == 1)
+    cdm <- PatientProfiles::mockPatientProfiles()
+    cdm[["cohort1"]] <- cdm[["cohort1"]] %>%
+      dplyr::group_by(subject_id) %>%
+      dplyr::filter(dplyr::row_number() == 1)
 
   # multiple cohort definition ids in exposure table
-  #  expect_error(cdm$cohort1 %>%
-  #                 addCohortSurvival(
-  #                   cdm = cdm,
-  #                   outcomeCohortTable = "cohort1",
-  #                   outcomeCohortId = 1
-  #                 ))
+    expect_error(cdm$cohort1 %>%
+                   addCohortSurvival(
+                     cdm = cdm,
+                     outcomeCohortTable = "cohort1",
+                     outcomeCohortId = 1
+                   ))
 
   CDMConnector::cdmDisconnect(cdm)
 })
@@ -615,7 +583,7 @@ test_that("within cohort survival", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -626,37 +594,29 @@ test_that("within cohort survival", {
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
   # default "cohort_start_date"
   # if using the same cohort, status would be 1, time would be 0 for everyone
-  cdm2$cohort1_start <- cdm2$cohort1 %>%
+  cdm$cohort1_start <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
       outcomeCohortId = 1,
       outcomeDateVariable = "cohort_start_date"
     )
-  expect_true(all(cdm2$cohort1_start %>%
+  expect_true(all(cdm$cohort1_start %>%
                     dplyr::pull("time") == 0))
-  expect_true(all(cdm2$cohort1_start %>%
+  expect_true(all(cdm$cohort1_start %>%
                     dplyr::pull("status") == 1))
 
-  cdm2$cohort1_end <- cdm2$cohort1 %>%
+  cdm$cohort1_end <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
       outcomeCohortId = 1,
       outcomeDateVariable = "cohort_end_date"
     )
 
-  expect_true(all(cdm2$cohort1_end %>%
+  expect_true(all(cdm$cohort1_end %>%
                     dplyr::collect() %>%
                     dplyr::mutate(dtime = as.numeric(difftime(cohort_end_date,
                                                               cohort_start_date)),
@@ -664,20 +624,20 @@ test_that("within cohort survival", {
                     dplyr::pull("equal")))
 
   # limit follow up
-  cdm2$cohort1_b <- cdm2$cohort1 %>%
+  cdm$cohort1_b <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
       outcomeCohortId = 1,
       outcomeDateVariable = "cohort_end_date",
       followUpDays = 100
     )
-  expect_true(all(cdm2$cohort1_b %>%
+  expect_true(all(cdm$cohort1_b %>%
                     dplyr::pull("time") == c(91,100,100)))
-  expect_true(all(cdm2$cohort1_b %>%
+  expect_true(all(cdm$cohort1_b %>%
                     dplyr::pull("status") == c(1,0,0)))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("allow overwrite of time and status", {
@@ -715,7 +675,7 @@ test_that("allow overwrite of time and status", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
@@ -726,45 +686,37 @@ test_that("allow overwrite of time and status", {
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
-
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  cdm2$cohort1 <- cdm2$cohort1 %>%
+  cdm$cohort1 <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
     )
 
-  cohort1_count <- cdm2$cohort1 %>%
+  cohort1_count <- cdm$cohort1 %>%
     dplyr::group_by(.data$cohort_definition_id) %>%
     dplyr::summarise(
       number_records = dplyr::n(),
       number_subjects = dplyr::n_distinct(.data$subject_id),
       .groups = "drop"
     )
-  cohort1_set <- cdm2$cohort1 %>%
+  cohort1_set <- cdm$cohort1 %>%
     dplyr::select("cohort_definition_id") %>%
     dplyr::distinct() %>%
     dplyr::mutate(cohort_name = "cohort1")
 
   # currently need to add attribute back to rerun
-  attr(cdm2$cohort1, "set") <- cohort1_set
-  attr(cdm2$cohort1, "count") <- cohort1_count
-  attr(cdm2$cohort1, "tbl_name") <- "cohort1"
+  attr(cdm$cohort1, "set") <- cohort1_set
+  attr(cdm$cohort1, "count") <- cohort1_count
+  attr(cdm$cohort1, "tbl_name") <- "cohort1"
 
-  cdm2$cohort1 <- cdm2$cohort1 %>%
+  cdm$cohort1 <- cdm$cohort1 %>%
     addCohortSurvival(
-      cdm = cdm2,
+      cdm = cdm,
       outcomeCohortTable = "cohort1",
     )
-  expect_true(!is.null(cdm2$cohort1))
+  expect_true(!is.null(cdm$cohort1))
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })
 
 test_that("multiple records per person", {
@@ -827,52 +779,44 @@ test_that("multiple records per person", {
     race_concept_id = c(rep(0,5))
   )
 
-  cdm <- omopgenerics::cdmFromTables(
+  cdm <- mockCohortSurvival(
     tables = list(
       person = person,
       observation_period = observation_period
     ),
     cohortTables = list(
-      cohort1 = outcome_cohort,
-      exposure_cohort = exposure_cohort
+      exposure_cohort = exposure_cohort,
+      cohort1 = outcome_cohort
     ),
     cdmName = "mock_es"
   )
 
-  cdm2 = CDMConnector::copyCdmTo(db,
-                                 cdm,
-                                 schema = "main",
-                                 overwrite = TRUE)
+  start_rows<-cdm$exposure_cohort %>% dplyr::count() %>% dplyr::pull()
 
-  attr(cdm2, "cdm_schema") <- "main"
-  attr(cdm2, "write_schema") <- "main"
-
-  start_rows<-cdm2$exposure_cohort %>% dplyr::count() %>% dplyr::pull()
-
-  cdm2$exposure_cohort <- cdm2$exposure_cohort %>%
-    addCohortSurvival(cdm = cdm2,
+  cdm$exposure_cohort <- cdm$exposure_cohort %>%
+    addCohortSurvival(cdm = cdm,
                       outcomeCohortTable = "cohort1")
 
-  end_rows <- cdm2$exposure_cohort %>% dplyr::count() %>% dplyr::pull()
+  end_rows <- cdm$exposure_cohort %>% dplyr::count() %>% dplyr::pull()
   expect_equal(start_rows, end_rows)
 
-  expect_true(cdm2$exposure_cohort %>%
+  expect_true(cdm$exposure_cohort %>%
                 dplyr::filter(subject_id == 1,
                               cohort_start_date == as.Date("2010-01-01")) %>%
                 dplyr::pull("status") == 1)
   # NA for the second as their cohort start was after their event
-  expect_true(is.na(cdm2$exposure_cohort %>%
+  expect_true(is.na(cdm$exposure_cohort %>%
                       dplyr::filter(subject_id == 1,
                                     cohort_start_date == as.Date("2015-01-01")) %>%
                       dplyr::pull("status")))
   # Both will be status == 1 as event came after second cohort entry
-  expect_true(all(cdm2$exposure_cohort %>%
+  expect_true(all(cdm$exposure_cohort %>%
                     dplyr::filter(subject_id == 2) %>%
                     dplyr::pull("status") == 1))
   # no event for subject 3
-  expect_true(cdm2$exposure_cohort %>%
+  expect_true(cdm$exposure_cohort %>%
                 dplyr::filter(subject_id == 3) %>%
                 dplyr::pull("status") == 0)
 
-  CDMConnector::cdmDisconnect(cdm2)
+  CDMConnector::cdmDisconnect(cdm)
 })

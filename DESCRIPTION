@@ -1,6 +1,6 @@
 Package: CohortSurvival
 Title: Estimate Survival from Common Data Model Cohorts
-Version: 1.0.2
+Version: 1.0.3
 Authors@R: c(
     person("Kim", "López-Güell", email = "kim.lopez@spc.ox.ac.uk", 
     role = c("aut", "cre"),
@@ -36,7 +36,7 @@ Config/testthat/parallel: true
 VignetteBuilder: knitr
 URL: https://darwin-eu-dev.github.io/CohortSurvival/
 NeedsCompilation: no
-Packaged: 2025-06-16 09:32:24 UTC; spet5356
+Packaged: 2025-08-18 11:53:22 UTC; spet5356
 Author: Kim López-Güell [aut, cre] (ORCID:
     <https://orcid.org/0000-0002-8462-8668>),
   Edward Burn [aut] (ORCID: <https://orcid.org/0000-0002-9286-1128>),
@@ -47,4 +47,4 @@ Author: Kim López-Güell [aut, cre] (ORCID:
     <https://orcid.org/0009-0006-7948-3747>)
 Maintainer: Kim López-Güell <kim.lopez@spc.ox.ac.uk>
 Repository: CRAN
-Date/Publication: 2025-06-16 10:00:02 UTC
+Date/Publication: 2025-08-18 12:30:08 UTC

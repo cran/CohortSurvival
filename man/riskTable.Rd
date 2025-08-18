@@ -10,6 +10,7 @@ riskTable(
   header = c("estimate"),
   type = "gt",
   groupColumn = NULL,
+  style = "default",
   .options = list()
 )
 }
@@ -28,6 +29,8 @@ and settings.}
 "flextable",  and "tibble".}
 
 \item{groupColumn}{Columns to use as group labels.}
+
+\item{style}{Named list that specifies how to style the different parts of the table generated. It can either be a pre-defined style ("default" or "darwin" - the latter just for gt and flextable), NULL to get the table default style, or custom. Keep in mind that styling code is different for all table styles. To see the different styles check visOmopResults::tableStyle().}
 
 \item{.options}{Named list with additional formatting options.
 CohortSurvival::optionsTableSurvival() shows allowed arguments and their

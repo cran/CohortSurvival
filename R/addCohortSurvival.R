@@ -96,6 +96,9 @@ addCohortSurvival <- function(x,
         targetDate = outcomeDateVariable,
         window = c(0, Inf),
         nameStyle = "days_to_event"
+      ) %>%
+      dplyr::mutate(
+        days_to_event = as.numeric(.data$days_to_event)
       )
   } else {
     # get any events before or after index date
@@ -114,6 +117,9 @@ addCohortSurvival <- function(x,
         targetDate = outcomeDateVariable,
         window = c(0, Inf),
         nameStyle = "days_to_event"
+      ) %>%
+      dplyr::mutate(
+        days_to_event = as.numeric(.data$days_to_event)
       )
   }
 
@@ -138,7 +144,8 @@ addCohortSurvival <- function(x,
         .data$days_to_exit, .data$days_end_cohort
       )) %>%
       dplyr::select(!"days_end_cohort") %>%
-      dplyr::compute(name = comp$name, temporary = comp$temporary)
+      dplyr::compute(name = comp$name, temporary = comp$temporary,
+                     logPrefix = "CohortSurvival_addCohortSurvival_censor_on_cohort_exit_")
   }
 
   if (!is.null(censorOnDate)) {
@@ -156,7 +163,8 @@ addCohortSurvival <- function(x,
         .data$days_to_exit, .data$days_to_censor
       )) %>%
       dplyr::select(!c("days_to_censor", "censor_date")) %>%
-      dplyr::compute(name = comp$name, temporary = comp$temporary)
+      dplyr::compute(name = comp$name, temporary = comp$temporary,
+                     logPrefix = "CohortSurvival_addCohortSurvival_censor_on_date")
   }
 
   if (followUpDays != Inf) {
@@ -169,7 +177,8 @@ addCohortSurvival <- function(x,
         .data$days_to_exit < .env$followUpDays,
         .data$days_to_exit, .env$followUpDays
       )) %>%
-      dplyr::compute(name = comp$name, temporary = comp$temporary)
+      dplyr::compute(name = comp$name, temporary = comp$temporary,
+                     logPrefix = "CohortSurvival_addCohortSurvival_follow_up_days_")
   }
 
   # now just using days_to_event and days_to_exit
@@ -213,7 +222,8 @@ addCohortSurvival <- function(x,
 
   x <- x %>%
     dplyr::select(!c("event_in_washout", "days_to_event")) %>%
-    dplyr::compute(name = comp$name, temporary = comp$temporary)
+    dplyr::compute(name = comp$name, temporary = comp$temporary,
+                   logPrefix = "CohortSurvival_addCohortSurvival_clean")
 
   return(x)
 }
@@ -235,19 +245,8 @@ validateExtractSurvivalInputs <- function(cdm,
   omopgenerics::assertLogical(censorOnCohortExit, length = 1)
   omopgenerics::assertNumeric(followUpDays, length = 1, min = 1, integerish = TRUE)
   omopgenerics::assertNumeric(outcomeWashout, length = 1, min = 0, integerish = TRUE)
+  outcomeCohortId <- omopgenerics::validateCohortIdArgument(outcomeCohortId, cdm[[outcomeCohortTable]])
 
-  # check specified cohort is in cohort table
-  errorMessage <- checkmate::makeAssertCollection()
-  if (!is.null(outcomeCohortId)) {
-    checkmate::assertTRUE(
-      checkCohortId(
-        cohort = cdm[[outcomeCohortTable]],
-        cohortId = outcomeCohortId
-      ),
-      add = errorMessage
-    )
-  }
-  return(checkmate::reportAssertions(collection = errorMessage))
 }
 
 newTable <- function(name, call = parent.frame()) {

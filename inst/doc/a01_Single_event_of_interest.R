@@ -63,6 +63,8 @@ tableSurvival(MGUS_death, times = c(30,90,180, 500))
 ## -----------------------------------------------------------------------------
 tableSurvival(MGUS_death, times = c(1,2), timeScale = "years")
 
+tableSurvival(MGUS_death, times = c(1,2), style = "darwin")
+
 ## -----------------------------------------------------------------------------
 optionsTableSurvival()
 
@@ -129,6 +131,9 @@ MGUS_death_strata <- estimateSingleEventSurvival(cdm,
 
 ## -----------------------------------------------------------------------------
 tableSurvival(MGUS_death_strata)
+
+## -----------------------------------------------------------------------------
+availableSurvivalGrouping(MGUS_death_strata)
 
 ## ----fig.height=6, fig.width=8------------------------------------------------
 plotSurvival(MGUS_death_strata,
