@@ -43,10 +43,10 @@ In our target cohort we also have a number of additional features (age or sex of
 Let us first take a quick look at the data we will be working with:
 
 ```{r}
-cdm$mgus_diagnosis %>% 
+cdm$mgus_diagnosis |> 
   glimpse()
 
-cdm$death_cohort %>% 
+cdm$death_cohort |> 
   glimpse()
 ```
 
@@ -66,7 +66,7 @@ MGUS_death <- estimateSingleEventSurvival(
   targetCohortTable = "mgus_diagnosis",
   outcomeCohortTable = "death_cohort"
 )
-MGUS_death %>% 
+MGUS_death |> 
   glimpse()
 class(MGUS_death)
 ```
@@ -173,23 +173,23 @@ The function `asSurvivalResult()` allows us to convert the result to a survival 
 
 ```{r}
 # Transforming the output to a survival result format
-MGUS_death_survresult <- MGUS_death %>% 
+MGUS_death_survresult <- MGUS_death |> 
   asSurvivalResult() 
-MGUS_death_survresult %>%
+MGUS_death_survresult |>
   glimpse()
 # Events, attrition and summary are now attributes of the result object
-attr(MGUS_death_survresult,"events") %>%
+attr(MGUS_death_survresult,"events") |>
   glimpse()
-attr(MGUS_death_survresult,"summary") %>%
+attr(MGUS_death_survresult,"summary") |>
   glimpse()
-attr(MGUS_death_survresult,"attrition") %>%
+attr(MGUS_death_survresult,"attrition") |>
   glimpse()
 ```
 
 We can now directly check all estimates for times 10 to 15, for instance, like this:
 
 ```{r}
-MGUS_death_survresult %>%
+MGUS_death_survresult |>
   filter(time %in% c(10:15))
 ```
 
@@ -229,8 +229,8 @@ MGUS_death_all <- omopgenerics::bind(
   MGUS_death_fu
 )
 
-MGUS_death_all %>%
-  asSurvivalResult() %>%
+MGUS_death_all |>
+  asSurvivalResult() |>
   glimpse()
 ```
 Note that the survival result has an additional column `follow_up_days`, as we would expect. Let us now see that both the `tableSurvival` and `plotSurvival` functions display all required information.

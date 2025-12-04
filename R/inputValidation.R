@@ -15,9 +15,9 @@
 # limitations under the License.
 
 checkExposureCohortId <- function(cohort) {
-  isCohortIdUnique <- length(cohort %>%
-                          dplyr::select("cohort_definition_id") %>%
-                          dplyr::pull() %>%
+  isCohortIdUnique <- length(cohort |>
+                          dplyr::select("cohort_definition_id") |>
+                          dplyr::pull() |>
                           unique()) == 1
 
   if(isFALSE(isCohortIdUnique)) {
@@ -29,8 +29,8 @@ checkExposureCohortId <- function(cohort) {
 
 checkCensorOnDate <- function(cohort, censorOnDate) {
   if(!is.null(censorOnDate)) {
-    start_dates <- cohort %>%
-      dplyr::select("cohort_start_date") %>%
+    start_dates <- cohort |>
+      dplyr::select("cohort_start_date") |>
       dplyr::pull()
     if(max(start_dates) > censorOnDate) {
       return(cli::cli_abort(c(

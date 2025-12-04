@@ -130,7 +130,6 @@ test_that("empty plot", {
   CDMConnector::cdmDisconnect(cdm)
 })
 
-# Add test for timeScale parameter in plotSurvival
 test_that("timeScale parameter in plotSurvival", {
   skip_on_cran()
 
@@ -154,7 +153,6 @@ test_that("timeScale parameter in plotSurvival", {
   CDMConnector::cdmDisconnect(cdm)
 })
 
-# Add test for logLog parameter in plotSurvival
 test_that("log-log survival plot", {
   skip_on_cran()
 
@@ -184,12 +182,24 @@ test_that("plot with bound results with different hidden inputs", {
   CDMConnector::cdmDisconnect(cdm)
 })
 
-test_that("expected errors for available columns", {
+test_that("darwin style produces correct plot", {
+  skip_on_cran()
+  cdm <- mockMGUS2cdm()
+  surv <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "death_cohort")
+  plot <- plotSurvival(surv, style = "darwin")
+  expect_true(ggplot2::is_ggplot(plot))
+  expect_error(plotSurvival(surv, style = darwin))
+  CDMConnector::cdmDisconnect(cdm)
+})
+
+test_that("expected errors for available columns and plot", {
   cdm <- mockMGUS2cdm()
   surv <- estimateSingleEventSurvival(cdm, "mgus_diagnosis", "death_cohort")
   expect_error(availableSurvivalGrouping(cdm))
   expect_error(availableSurvivalGrouping(2))
-  expect_error(availableSurvivalGrouping(surv %>%
-                                           asSurvivalResult()))
   expect_error(availableSurvivalGrouping(surv, "FALSE"))
+  expect_error(plotSurvival(dplyr::tibble("a" = 2)))
+  survCR <- estimateCompetingRiskSurvival(cdm, "mgus_diagnosis", "progression", "death_cohort")
+  expect_error(plotSurvival(survCR))
+  expect_error(plotSurvival(surv, riskTable = TRUE, riskInterval = 500))
 })

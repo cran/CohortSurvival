@@ -15,10 +15,10 @@ library(ggplot2)
 cdm <- CohortSurvival::mockMGUS2cdm()
 
 ## -----------------------------------------------------------------------------
-cdm$mgus_diagnosis %>% 
+cdm$mgus_diagnosis |> 
   glimpse()
 
-cdm$death_cohort %>% 
+cdm$death_cohort |> 
   glimpse()
 
 ## -----------------------------------------------------------------------------
@@ -27,7 +27,7 @@ MGUS_death <- estimateSingleEventSurvival(
   targetCohortTable = "mgus_diagnosis",
   outcomeCohortTable = "death_cohort"
 )
-MGUS_death %>% 
+MGUS_death |> 
   glimpse()
 class(MGUS_death)
 
@@ -78,20 +78,20 @@ riskTable(MGUS_death)
 
 ## -----------------------------------------------------------------------------
 # Transforming the output to a survival result format
-MGUS_death_survresult <- MGUS_death %>% 
+MGUS_death_survresult <- MGUS_death |> 
   asSurvivalResult() 
-MGUS_death_survresult %>%
+MGUS_death_survresult |>
   glimpse()
 # Events, attrition and summary are now attributes of the result object
-attr(MGUS_death_survresult,"events") %>%
+attr(MGUS_death_survresult,"events") |>
   glimpse()
-attr(MGUS_death_survresult,"summary") %>%
+attr(MGUS_death_survresult,"summary") |>
   glimpse()
-attr(MGUS_death_survresult,"attrition") %>%
+attr(MGUS_death_survresult,"attrition") |>
   glimpse()
 
 ## -----------------------------------------------------------------------------
-MGUS_death_survresult %>%
+MGUS_death_survresult |>
   filter(time %in% c(10:15))
 
 ## ----fig.width=13,fig.height=13-----------------------------------------------
@@ -111,8 +111,8 @@ MGUS_death_all <- omopgenerics::bind(
   MGUS_death_fu
 )
 
-MGUS_death_all %>%
-  asSurvivalResult() %>%
+MGUS_death_all |>
+  asSurvivalResult() |>
   glimpse()
 
 ## -----------------------------------------------------------------------------

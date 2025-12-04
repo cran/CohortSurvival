@@ -366,18 +366,18 @@ need for the <code>coxph</code> function in the package
 <code>survival</code>, for instance, we only need to call
 <code>addCohortSurvival</code>. The stratification variables need to be
 columns previously added to the cohort by the user.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>input_survival_single <span class="ot">&lt;-</span> cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>input_survival_single <span class="ot">&lt;-</span> cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">|&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>       <span class="fu">addCohortSurvival</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>       <span class="at">cdm =</span> cdm,</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>       <span class="at">outcomeCohortTable =</span> <span class="st">&quot;death_cohort&quot;</span>,</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>       <span class="at">outcomeCohortId =</span> <span class="dv">1</span></span>
 <span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>       ) </span>
 <span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>input_survival_single <span class="sc">%&gt;%</span> </span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>input_survival_single <span class="sc">|&gt;</span> </span>
 <span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB 1.4.2 [root@Darwin 25.0.0:R 4.5.2/:memory:]</span></span>
 <span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 1…</span></span>
 <span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1981-01-01, 1968-01-01, 1980-01-01, 1977-01-01, …</span></span>
@@ -399,18 +399,18 @@ anytime, and follow them up for only one year. We can also decide to use
 <code>cohort_end_date</code> as their outcome variable and censor them
 at a particular date, for instance, the 1st of January of 1994. We see
 how that gives us different results:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">|&gt;</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>       <span class="fu">addCohortSurvival</span>(</span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>       <span class="at">cdm =</span> cdm,</span>
 <span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>       <span class="at">outcomeCohortTable =</span> <span class="st">&quot;death_cohort&quot;</span>,</span>
 <span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>       <span class="at">outcomeWashout =</span> <span class="dv">180</span>,</span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>       <span class="at">followUpDays =</span> <span class="dv">365</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>       ) <span class="sc">%&gt;%</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">filter</span>(cohort_start_date <span class="sc">&gt;</span> <span class="st">&quot;1993-01-01&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a>       ) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a>  <span class="fu">filter</span>(cohort_start_date <span class="sc">&gt;</span> <span class="st">&quot;1993-01-01&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB 1.4.2 [root@Darwin 25.0.0:R 4.5.2/:memory:]</span></span>
 <span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 213, 671, 941, 1245, 1248, 1340, 1374, 1376, 1380…</span></span>
 <span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1994-01-01, 1994-01-01, 1994-01-01, 1994-01-01, …</span></span>
@@ -424,18 +424,18 @@ how that gives us different results:</p>
 <span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt; $ days_to_exit         &lt;dbl&gt; 19, 43, 12, 1, 10, 46, 40, 41, 22, 31, 6, 57, 52,…</span></span>
 <span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; $ status               &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0…</span></span>
 <span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; $ time                 &lt;dbl&gt; 19, 43, 12, 1, 10, 46, 40, 41, 22, 31, 6, 57, 52,…</span></span>
-<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">%&gt;%</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a>cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">|&gt;</span></span>
 <span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a>       <span class="fu">addCohortSurvival</span>(</span>
 <span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a>       <span class="at">cdm =</span> cdm,</span>
 <span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a>       <span class="at">outcomeCohortTable =</span> <span class="st">&quot;death_cohort&quot;</span>,</span>
 <span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a>       <span class="at">outcomeDateVariable =</span> <span class="st">&quot;cohort_end_date&quot;</span>,</span>
 <span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>       <span class="at">censorOnDate =</span> <span class="fu">as.Date</span>(<span class="st">&quot;1994-01-01&quot;</span>)</span>
-<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>       ) <span class="sc">%&gt;%</span></span>
-<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>    <span class="fu">filter</span>(cohort_start_date <span class="sc">&gt;</span> <span class="st">&quot;1993-01-01&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a>       ) <span class="sc">|&gt;</span></span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a>    <span class="fu">filter</span>(cohort_start_date <span class="sc">&gt;</span> <span class="st">&quot;1993-01-01&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a>  <span class="fu">glimpse</span>()</span>
 <span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="co">#&gt; Rows: ??</span></span>
 <span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; Columns: 13</span></span>
-<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB v1.3.2 [root@Darwin 24.5.0:R 4.5.1/:memory:]</span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt; Database: DuckDB 1.4.2 [root@Darwin 25.0.0:R 4.5.2/:memory:]</span></span>
 <span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; $ cohort_definition_id &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></span>
 <span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a><span class="co">#&gt; $ subject_id           &lt;int&gt; 213, 671, 941, 1245, 1248, 1340, 1374, 1376, 1380…</span></span>
 <span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co">#&gt; $ cohort_start_date    &lt;date&gt; 1994-01-01, 1994-01-01, 1994-01-01, 1994-01-01, …</span></span>
@@ -484,31 +484,31 @@ what outcome (if any) to count per individual so that we can feed the
 result to subsequent models.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># Add all status and time information for both outcomes</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  input_survival_cr <span class="ot">&lt;-</span> cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="fu">addCohortSurvival</span>(cdm, <span class="st">&quot;progression&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  input_survival_cr <span class="ot">&lt;-</span> cdm<span class="sc">$</span>mgus_diagnosis <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>    <span class="fu">addCohortSurvival</span>(cdm, <span class="st">&quot;progression&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(</span>
 <span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>      <span class="st">&quot;outcome_time&quot;</span> <span class="ot">=</span> <span class="st">&quot;time&quot;</span>,</span>
 <span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>      <span class="st">&quot;outcome_status&quot;</span> <span class="ot">=</span> <span class="st">&quot;status&quot;</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>     <span class="fu">addCohortSurvival</span>(cdm, <span class="st">&quot;death_cohort&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>     <span class="fu">addCohortSurvival</span>(cdm, <span class="st">&quot;death_cohort&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">rename</span>(</span>
 <span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>      <span class="st">&quot;competing_outcome_time&quot;</span> <span class="ot">=</span> <span class="st">&quot;time&quot;</span>,</span>
 <span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>      <span class="st">&quot;competing_outcome_status&quot;</span> <span class="ot">=</span> <span class="st">&quot;status&quot;</span></span>
 <span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>    )</span>
 <span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  </span>
 <span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="co"># Collect and </span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  input_survival_cr <span class="ot">&lt;-</span> input_survival_cr <span class="sc">%&gt;%</span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>  input_survival_cr <span class="ot">&lt;-</span> input_survival_cr <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">collect</span>() <span class="sc">|&gt;</span></span>
 <span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">mutate</span>(</span>
 <span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>      <span class="at">time =</span> <span class="fu">pmin</span>(outcome_time, competing_outcome_time),</span>
 <span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>      <span class="at">status =</span> <span class="fu">factor</span>(</span>
 <span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>        dplyr<span class="sc">::</span><span class="fu">if_else</span>(competing_outcome_time <span class="sc">&lt;=</span> outcome_time, <span class="dv">2</span> <span class="sc">*</span> competing_outcome_status, outcome_status))</span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>    ) <span class="sc">%&gt;%</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
 <span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;outcome_time&quot;</span>, <span class="st">&quot;outcome_status&quot;</span>, <span class="st">&quot;competing_outcome_time&quot;</span>, <span class="st">&quot;competing_outcome_status&quot;</span>))</span></code></pre></div>
 <p>We can use the package <code>cmprsk</code> to fit a Fine and Gray
 model to the competing risk data. We first change our <code>sex</code>
 covariate to numeric, and then we can run the analysis:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>input_survival_cr <span class="ot">&lt;-</span> input_survival_cr <span class="sc">%&gt;%</span></span>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>input_survival_cr <span class="ot">&lt;-</span> input_survival_cr <span class="sc">|&gt;</span></span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">sex =</span> dplyr<span class="sc">::</span><span class="fu">if_else</span>(sex <span class="sc">==</span> <span class="st">&quot;M&quot;</span>, <span class="dv">0</span>, <span class="dv">1</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>covs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(input_survival_cr<span class="sc">$</span>age, input_survival_cr<span class="sc">$</span>sex)</span>

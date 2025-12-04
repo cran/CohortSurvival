@@ -15,13 +15,13 @@ library(ggplot2)
 cdm <- CohortSurvival::mockMGUS2cdm()
 
 ## -----------------------------------------------------------------------------
-cdm$mgus_diagnosis %>% 
+cdm$mgus_diagnosis |> 
   glimpse()
 
-cdm$death_cohort %>% 
+cdm$death_cohort |> 
   glimpse()
 
-cdm$progression %>%
+cdm$progression |>
   glimpse()
 
 ## ----fig.width=5--------------------------------------------------------------
@@ -31,8 +31,8 @@ MGUS_death_prog <- estimateCompetingRiskSurvival(cdm,
   competingOutcomeCohortTable = "death_cohort"
 ) 
 
-MGUS_death_prog %>% 
-  asSurvivalResult() %>% 
+MGUS_death_prog |> 
+  asSurvivalResult() |> 
   glimpse()
 
 ## ----out.width = "75%"--------------------------------------------------------
@@ -53,7 +53,7 @@ MGUS_death_prog <-  estimateCompetingRiskSurvival(cdm,
 
 
 ## ----fig.height=6, fig.width=8------------------------------------------------
-plotSurvival(MGUS_death_prog %>% 
+plotSurvival(MGUS_death_prog |> 
                dplyr::filter(strata_name != "Overall"), 
              facet = "sex",
              colour = "variable",
