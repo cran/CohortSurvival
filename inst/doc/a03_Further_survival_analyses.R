@@ -64,7 +64,7 @@ survival::survdiff(survival::Surv(time, status) ~ sex, data = input_survival_sin
       "competing_outcome_status" = "status"
     )
   
-  # Collect and 
+  # Collect and combine the two event processes
   input_survival_cr <- input_survival_cr |>
     dplyr::collect() |>
     dplyr::mutate(
